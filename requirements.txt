@@ -1,0 +1,10 @@
+fastapi
+uvicorn[standard]
+python-multipart
+httpx
+numpy
+scikit-learn
+openai
+anthropic
+google-generativeai
+tiktoken

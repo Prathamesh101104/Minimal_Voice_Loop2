@@ -1,0 +1,32 @@
+2026-07-30 16:20:27,849 INFO Loading faiss with AVX512 support.
+2026-07-30 16:20:27,851 INFO Could not load library with AVX512 support due to:
+ModuleNotFoundError("No module named 'faiss.swigfaiss_avx512'")
+2026-07-30 16:20:27,852 INFO Loading faiss with AVX2 support.
+2026-07-30 16:20:27,852 INFO Could not load library with AVX2 support due to:
+ModuleNotFoundError("No module named 'faiss.swigfaiss_avx2'")
+2026-07-30 16:20:27,853 INFO Loading faiss.
+2026-07-30 16:20:27,901 INFO Successfully loaded faiss.
+2026-07-30 17:17:34,414 INFO Loading faiss with AVX512 support.
+2026-07-30 17:17:34,416 INFO Could not load library with AVX512 support due to:
+ModuleNotFoundError("No module named 'faiss.swigfaiss_avx512'")
+2026-07-30 17:17:34,417 INFO Loading faiss with AVX2 support.
+2026-07-30 17:17:34,417 INFO Could not load library with AVX2 support due to:
+ModuleNotFoundError("No module named 'faiss.swigfaiss_avx2'")
+2026-07-30 17:17:34,417 INFO Loading faiss.
+2026-07-30 17:17:34,553 INFO Successfully loaded faiss.
+2026-07-30 17:17:56,250 INFO Loading faiss with AVX512 support.
+2026-07-30 17:17:56,251 INFO Could not load library with AVX512 support due to:
+ModuleNotFoundError("No module named 'faiss.swigfaiss_avx512'")
+2026-07-30 17:17:56,251 INFO Loading faiss with AVX2 support.
+2026-07-30 17:17:56,252 INFO Could not load library with AVX2 support due to:
+ModuleNotFoundError("No module named 'faiss.swigfaiss_avx2'")
+2026-07-30 17:17:56,252 INFO Loading faiss.
+2026-07-30 17:17:56,286 INFO Successfully loaded faiss.
+2026-07-30 17:29:15,401 INFO Loading faiss with AVX512 support.
+2026-07-30 17:29:15,403 INFO Could not load library with AVX512 support due to:
+ModuleNotFoundError("No module named 'faiss.swigfaiss_avx512'")
+2026-07-30 17:29:15,403 INFO Loading faiss with AVX2 support.
+2026-07-30 17:29:15,403 INFO Could not load library with AVX2 support due to:
+ModuleNotFoundError("No module named 'faiss.swigfaiss_avx2'")
+2026-07-30 17:29:15,404 INFO Loading faiss.
+2026-07-30 17:29:15,466 INFO Successfully loaded faiss.
