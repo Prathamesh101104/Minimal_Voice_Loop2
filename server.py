@@ -1919,7 +1919,36 @@ async def _phone_tts_pcm(text: str, target_sample_rate: int = VOBIZ_STREAM_SAMPL
     if not cleaned:
         return b""
 
-    # 1. Try OpenAI TTS first (produces direct 24kHz mono PCM16)
+    # 1. Try Gemini native TTS first (configured with Gemini_API_Key)
+    gemini_key = config_state.get("gemini_key") or os.environ.get("Gemini_API_Key") or os.environ.get("GEMINI_API_KEY")
+    if gemini_key:
+        try:
+            import base64
+            import httpx
+            url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-tts:generateContent?key={gemini_key}"
+            body = {
+                "contents": [{"parts": [{"text": f"Read the following text aloud exactly: {cleaned}"}]}],
+                "generationConfig": {
+                    "responseModalities": ["AUDIO"],
+                    "speechConfig": {"voiceConfig": {"prebuiltVoiceConfig": {"voiceName": "Zephyr"}}},
+                },
+            }
+            async with httpx.AsyncClient() as client:
+                r = await client.post(url, json=body, timeout=30.0)
+            if r.status_code == 200:
+                part = r.json()["candidates"][0]["content"]["parts"][0]
+                inline_obj = part.get("inlineData") or part.get("inline_data") or {}
+                raw_b64 = inline_obj.get("data", "")
+                if raw_b64:
+                    pcm_data = base64.b64decode(raw_b64)
+                    logger.info("Gemini TTS generated %d bytes of PCM audio", len(pcm_data))
+                    return resample_pcm(pcm_data, 24000, target_sample_rate)
+            else:
+                logger.warning("Gemini TTS failed (%s): %s", r.status_code, r.text[:300])
+        except Exception as e:
+            logger.warning("Gemini TTS failed: %s", e)
+
+    # 2. Try OpenAI TTS next
     openai_key = config_state.get("openai_key") or os.environ.get("OpenAI_API_Key") or os.environ.get("OPENAI_API_KEY")
     if openai_key:
         try:
@@ -1940,32 +1969,6 @@ async def _phone_tts_pcm(text: str, target_sample_rate: int = VOBIZ_STREAM_SAMPL
                 return resample_pcm(audio_bytes, 24000, target_sample_rate)
         except Exception as e:
             logger.warning("OpenAI TTS failed: %s", e)
-
-    # 2. Try Gemini native TTS next
-    gemini_key = config_state.get("gemini_key") or os.environ.get("Gemini_API_Key") or os.environ.get("GEMINI_API_KEY")
-    if gemini_key:
-        try:
-            import base64
-            import httpx
-            url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-tts:generateContent?key={gemini_key}"
-            body = {
-                "contents": [{"parts": [{"text": cleaned}]}],
-                "generationConfig": {
-                    "responseModalities": ["AUDIO"],
-                    "speechConfig": {"voiceConfig": {"prebuiltVoiceConfig": {"voiceName": "Zephyr"}}},
-                },
-            }
-            async with httpx.AsyncClient() as client:
-                r = await client.post(url, json=body, timeout=30.0)
-            if r.status_code == 200:
-                part = r.json()["candidates"][0]["content"]["parts"][0]
-                pcm_data = base64.b64decode(part["inlineData"]["data"])
-                logger.info("Gemini TTS generated %d bytes of PCM audio", len(pcm_data))
-                return resample_pcm(pcm_data, 24000, target_sample_rate)
-            else:
-                logger.warning("Gemini TTS failed (%s): %s", r.status_code, r.text[:300])
-        except Exception as e:
-            logger.warning("Gemini TTS failed: %s", e)
 
     # 3. Try ElevenLabs TTS as fallback
     elevenlabs_key = config_state.get("elevenlabs_key") or os.environ.get("ElevenLabs_API_Key") or os.environ.get("ELEVENLABS_API_KEY")
