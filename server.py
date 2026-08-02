@@ -2006,8 +2006,10 @@ async def _phone_tts_pcm(text: str, target_sample_rate: int = VOBIZ_STREAM_SAMPL
 async def _send_vobiz_audio(websocket: WebSocket, stream_id: str, audio: bytes, sample_rate: int):
     import base64
 
-    if not audio or not stream_id:
+    if not audio:
         return
+    if not stream_id:
+        stream_id = "vobiz-stream"
 
     chunk_size = sample_rate * 2 // (1000 // VOBIZ_FRAME_MS)
     for offset in range(0, len(audio), chunk_size):
@@ -2136,17 +2138,18 @@ async def vobiz_stream(websocket: WebSocket):
     media_frames = 0
 
     async def speak_to_caller(text: str):
-        nonlocal agent_speaking
-        if not text or not stream_id:
-            logger.warning("speak_to_caller: text=%s stream_id=%s, skipping", "yes" if text else "no", stream_id)
+        nonlocal agent_speaking, stream_id
+        current_stream_id = stream_id or "vobiz-stream"
+        if not text:
+            logger.warning("speak_to_caller: no text provided, skipping")
             return
         agent_speaking = True
-        logger.info("speak_to_caller: generating TTS for %d char text", len(text))
+        logger.info("speak_to_caller: generating TTS for %d char text (stream_id=%s)", len(text), current_stream_id)
         try:
             response_audio = await _phone_tts_pcm(text, sample_rate)
             if response_audio:
                 logger.info("speak_to_caller: sending audio response: %d bytes", len(response_audio))
-                await _send_vobiz_audio(websocket, stream_id, response_audio, sample_rate)
+                await _send_vobiz_audio(websocket, current_stream_id, response_audio, sample_rate)
             else:
                 logger.warning("speak_to_caller: TTS returned no audio")
         except Exception as e:
