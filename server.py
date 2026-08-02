@@ -1827,7 +1827,6 @@ def _vobiz_stream_twiml(host: str) -> str:
     stream_url = f"wss://{host}/api/phone/vobiz-stream"
     return f"""<?xml version="1.0" encoding="UTF-8"?>
 <Response>
-    <Say>{PHONE_GREETING}</Say>
     <Stream bidirectional="true" keepCallAlive="true" audioTrack="inbound" contentType="audio/x-l16;rate={VOBIZ_STREAM_SAMPLE_RATE}" streamTimeout="3600">
         {stream_url}
     </Stream>
@@ -1873,72 +1872,125 @@ async def _gemini_transcribe_phone_audio(audio: bytes, sample_rate: int) -> str:
 
     if backend == "gemini":
         key = config_state.get("gemini_key") or os.environ.get("Gemini_API_Key") or os.environ.get("GEMINI_API_KEY")
-        url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key={key}"
-        body = {
-            "contents": [{"parts": [
-                {"text": "Transcribe this phone call audio exactly. Return only the caller's spoken words."},
-                {"inline_data": {"mime_type": "audio/wav", "data": base64.b64encode(wav_audio).decode()}}
-            ]}]
-        }
-        async with httpx.AsyncClient() as client:
-            response = await client.post(url, json=body, timeout=30.0)
-        if response.status_code == 200:
-            candidates = response.json().get("candidates") or [{}]
-            parts = candidates[0].get("content", {}).get("parts", [])
-            transcript = "".join(part.get("text", "") for part in parts).strip()
-            if transcript:
-                return transcript
-        logger.error("Vobiz stream ASR error: %s %s", response.status_code, response.text[:200])
-
-    if backend == "openai":
-        openai_key = config_state.get("openai_key") or os.environ.get("OPENAI_API_KEY")
-        if openai_key:
+        if key:
+            url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key={key}"
+            body = {
+                "contents": [{"parts": [
+                    {"text": "Transcribe this phone call audio exactly. Return only the caller's spoken words."},
+                    {"inlineData": {"mimeType": "audio/wav", "data": base64.b64encode(wav_audio).decode()}}
+                ]}]
+            }
             try:
-                client = OpenAI(api_key=openai_key)
-                with BytesIO(wav_audio) as audio_file:
-                    result = await asyncio.to_thread(
-                        client.audio.transcriptions.create,
-                        model="whisper-1",
-                        file=("phone-call.wav", audio_file, "audio/wav"),
-                    )
-                transcript = getattr(result, "text", "") or ""
-                if transcript.strip():
-                    return transcript.strip()
+                async with httpx.AsyncClient() as client:
+                    response = await client.post(url, json=body, timeout=30.0)
+                if response.status_code == 200:
+                    candidates = response.json().get("candidates") or [{}]
+                    parts = candidates[0].get("content", {}).get("parts", [])
+                    transcript = "".join(part.get("text", "") for part in parts).strip()
+                    if transcript:
+                        return transcript
+                else:
+                    logger.error("Vobiz stream Gemini ASR error: %s %s", response.status_code, response.text[:200])
             except Exception as exc:
-                logger.exception("Vobiz stream OpenAI ASR fallback error: %s", exc)
+                logger.exception("Vobiz stream Gemini ASR exception: %s", exc)
+
+    # Fallback to OpenAI Whisper if Gemini fails or is not selected
+    openai_key = config_state.get("openai_key") or os.environ.get("OPENAI_API_KEY")
+    if openai_key:
+        try:
+            client = OpenAI(api_key=openai_key)
+            with BytesIO(wav_audio) as audio_file:
+                result = await asyncio.to_thread(
+                    client.audio.transcriptions.create,
+                    model="whisper-1",
+                    file=("phone-call.wav", audio_file, "audio/wav"),
+                )
+            transcript = getattr(result, "text", "") or ""
+            if transcript.strip():
+                return transcript.strip()
+        except Exception as exc:
+            logger.exception("Vobiz stream OpenAI ASR fallback error: %s", exc)
 
     return ""
 
 async def _phone_tts_pcm(text: str, target_sample_rate: int = VOBIZ_STREAM_SAMPLE_RATE) -> bytes:
-    import base64
-    import httpx
-
+    """Generate phone-compatible PCM audio using available TTS service."""
     cleaned = clean_text_for_tts(text)
-    key = config_state.get("gemini_key") or os.environ.get("Gemini_API_Key") or os.environ.get("GEMINI_API_KEY")
-    if not key or not cleaned:
+    if not cleaned:
         return b""
 
-    url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key={key}"
-    body = {
-        "contents": [{"parts": [{"text": cleaned}]}],
-        "generationConfig": {
-            "responseModalities": ["AUDIO"],
-            "speechConfig": {"voiceConfig": {"prebuiltVoiceConfig": {"voiceName": "Zephyr"}}}
-        }
-    }
-    async with httpx.AsyncClient() as client:
-        response = await client.post(url, json=body, timeout=30.0)
-    if response.status_code != 200:
-        logger.error("Vobiz stream TTS error: %s %s", response.status_code, response.text[:200])
-        return b""
-    candidates = response.json().get("candidates") or [{}]
-    parts = candidates[0].get("content", {}).get("parts", [])
-    for part in parts:
-        inline = part.get("inlineData") or part.get("inline_data")
-        if inline and inline.get("data"):
-            pcm = base64.b64decode(inline["data"])
-            return resample_pcm(pcm, 24000, target_sample_rate)
-    return b""
+    # Try Gemini native TTS first — this is the key you actually have configured.
+    # NOTE: gemini-2.5-flash does NOT do audio output; you need the dedicated -tts model.
+    gemini_key = config_state.get("gemini_key") or os.environ.get("Gemini_API_Key") or os.environ.get("GEMINI_API_KEY")
+    if gemini_key:
+        try:
+            import base64
+            import httpx
+            url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-tts:generateContent?key={gemini_key}"
+            body = {
+                "contents": [{"parts": [{"text": cleaned}]}],
+                "generationConfig": {
+                    "responseModalities": ["AUDIO"],
+                    "speechConfig": {"voiceConfig": {"prebuiltVoiceConfig": {"voiceName": "Zephyr"}}},
+                },
+            }
+            async with httpx.AsyncClient() as client:
+                r = await client.post(url, json=body, timeout=30.0)
+            if r.status_code == 200:
+                part = r.json()["candidates"][0]["content"]["parts"][0]
+                pcm_data = base64.b64decode(part["inlineData"]["data"])
+                # Gemini TTS returns 24kHz mono PCM16 — resample down to the phone line's rate.
+                return resample_pcm(pcm_data, 24000, target_sample_rate)
+            else:
+                logger.warning("Gemini TTS failed (%s): %s", r.status_code, r.text[:300])
+        except Exception as e:
+            logger.warning("Gemini TTS failed: %s", e)
+
+    # Try OpenAI TTS next
+    openai_key = config_state.get("openai_key") or os.environ.get("OpenAI_API_Key") or os.environ.get("OPENAI_API_KEY")
+    if openai_key:
+        try:
+            def _call_openai_tts():
+                from openai import OpenAI
+                client = OpenAI(api_key=openai_key)
+                response = client.audio.speech.create(
+                    model="tts-1",
+                    voice="echo",
+                    input=cleaned,
+                    response_format="pcm"
+                )
+                return response.content
+
+            audio_bytes = await asyncio.to_thread(_call_openai_tts)
+            if audio_bytes:
+                return resample_pcm(audio_bytes, 24000, target_sample_rate)
+        except Exception as e:
+            logger.warning("OpenAI TTS failed: %s", e)
+
+    # Try ElevenLabs TTS as fallback
+    elevenlabs_key = config_state.get("elevenlabs_key") or os.environ.get("ElevenLabs_API_Key") or os.environ.get("ELEVENLABS_API_KEY")
+    if elevenlabs_key:
+        try:
+            import httpx
+            url = "https://api.elevenlabs.io/v1/text-to-speech/EXAVITQu4vr4xnSDxMaL"
+            headers = {"xi-api-key": elevenlabs_key, "Content-Type": "application/json", "accept": "audio/mp3"}
+            body = {"text": cleaned, "model_id": "eleven_monolingual_v1"}
+            async with httpx.AsyncClient() as client:
+                response = await client.post(url, json=body, headers=headers, timeout=10.0)
+            if response.status_code == 200:
+                logger.info("ElevenLabs TTS generated %d bytes (MP3)", len(response.content))
+                return response.content
+            else:
+                logger.warning("ElevenLabs TTS error: %s", response.text[:200])
+        except Exception as e:
+            logger.warning("ElevenLabs TTS failed: %s", e)
+
+    # Fallback: silence, to keep the connection alive
+    logger.warning("No TTS service available, generating fallback silence/tone")
+    import struct
+    num_samples = target_sample_rate * 2
+    fallback_audio = struct.pack("<" + "h" * num_samples, *([0] * num_samples))
+    return fallback_audio
 
 async def _send_vobiz_audio(websocket: WebSocket, stream_id: str, audio: bytes, sample_rate: int):
     import base64
@@ -1982,18 +2034,25 @@ def _extract_vobiz_media_payload(message: Any, encoding: str) -> tuple[bytes, st
         media = message.get("media") or {}
         if isinstance(media, dict):
             payload = media.get("payload") or media.get("data") or ""
+            track = media.get("track") or "inbound"
             if isinstance(payload, str):
                 try:
-                    return base64.b64decode(payload), media.get("track", "inbound")
+                    return base64.b64decode(payload), track
                 except Exception:
-                    return payload.encode("utf-8"), media.get("track", "inbound")
+                    return payload.encode("utf-8"), track
             if isinstance(payload, (bytes, bytearray)):
-                return bytes(payload), media.get("track", "inbound")
+                return bytes(payload), track
         event = message.get("event")
-        if event == "media" and isinstance(message.get("data"), (bytes, bytearray)):
-            return bytes(message["data"]), "inbound"
-        if event == "media" and isinstance(message.get("payload"), (bytes, bytearray)):
-            return bytes(message["payload"]), "inbound"
+        if event == "media":
+            payload = message.get("data") or message.get("payload") or ""
+            track = message.get("track") or "inbound"
+            if isinstance(payload, str):
+                try:
+                    return base64.b64decode(payload), track
+                except Exception:
+                    return payload.encode("utf-8"), track
+            if isinstance(payload, (bytes, bytearray)):
+                return bytes(payload), track
     return b"", "inbound"
 
 
@@ -2030,24 +2089,13 @@ def _normalize_vobiz_audio(frame: bytes, encoding: str) -> bytes:
         usable = frame[: len(frame) - len(frame) % 2]
         if not usable:
             return b""
-        if len(usable) >= 2:
-            try:
-                # Some providers send big-endian PCM; try both byte orders and keep the one
-                # that produces a more natural audio range for speech.
-                little = b"".join(usable[i:i + 2] for i in range(0, len(usable), 2))
-                big = b"".join(usable[i:i + 2][::-1] for i in range(0, len(usable), 2))
-                if len(little) != len(big):
-                    return little
-                little_samples = struct.unpack("<" + "h" * (len(little) // 2), little)
-                big_samples = struct.unpack(">" + "h" * (len(big) // 2), big)
-                little_energy = sum(abs(s) for s in little_samples) / max(1, len(little_samples))
-                big_energy = sum(abs(s) for s in big_samples) / max(1, len(big_samples))
-                if big_energy > little_energy * 1.5:
-                    return big
-                return little
-            except struct.error:
-                return usable
-        return usable
+        # Telephony RFC 3551 L16 / audio/x-l16 is Network Byte Order (Big-Endian).
+        # We convert it to Little-Endian 16-bit PCM for standard ASR engines.
+        converted = bytearray()
+        for i in range(0, len(usable), 2):
+            val = struct.unpack(">h", usable[i:i + 2])[0]
+            converted.extend(struct.pack("<h", val))
+        return bytes(converted)
 
     return frame
 
@@ -2057,6 +2105,7 @@ async def vobiz_stream(websocket: WebSocket):
     import base64
     import math
     import json
+    import collections
 
     await websocket.accept()
     logger.info("Vobiz websocket accepted")
@@ -2064,6 +2113,7 @@ async def vobiz_stream(websocket: WebSocket):
     call_id = None
     sample_rate = VOBIZ_STREAM_SAMPLE_RATE
     audio_buffer = bytearray()
+    pre_roll_buffer = collections.deque(maxlen=10)
     speech_started = False
     silence_ms = 0
     utterance_ms = 0
@@ -2123,6 +2173,66 @@ async def vobiz_stream(websocket: WebSocket):
         session["history"].append({"role": "assistant", "content": response_text})
         await speak_to_caller(response_text)
 
+    async def process_audio_payload(payload_bytes: bytes, track: str):
+        nonlocal media_frames, speech_started, silence_ms, utterance_ms, agent_speaking, processing_task, greeting_task
+        if not payload_bytes:
+            return
+        if track and track.lower() not in ("inbound", "inbound_track", "caller", "user"):
+            return
+
+        frame = _normalize_vobiz_audio(payload_bytes, media_encoding)
+        if not frame:
+            return
+
+        media_frames += 1
+        if media_frames == 1:
+            logger.info("First Vobiz media frame received: %d bytes, encoding=%s", len(frame), media_encoding)
+
+        import struct
+        samples = struct.unpack("<" + "h" * (len(frame) // 2), frame[: len(frame) - len(frame) % 2])
+        if not samples:
+            return
+        rms = math.sqrt(sum(sample * sample for sample in samples) / max(len(samples), 1))
+        peak = max(abs(sample) for sample in samples)
+        is_voice = rms > 20 or peak > 70
+        endpoint_ms = int(config_state.get("endpoint_duration") or 600)
+
+        if not speech_started:
+            pre_roll_buffer.append(frame)
+
+        if is_voice and not speech_started:
+            speech_started = True
+            silence_ms = 0
+            logger.info("Speech detected at frame %d (RMS=%.1f peak=%d), buffering with pre-roll...", media_frames, rms, peak)
+            if stream_id and agent_speaking:
+                await websocket.send_json({"event": "clearAudio", "streamId": stream_id})
+                agent_speaking = False
+                if greeting_task and not greeting_task.done():
+                    greeting_task.cancel()
+            audio_buffer.clear()
+            for pf in pre_roll_buffer:
+                audio_buffer.extend(pf)
+            pre_roll_buffer.clear()
+
+        if speech_started and not agent_speaking:
+            audio_buffer.extend(frame)
+            utterance_ms += VOBIZ_FRAME_MS
+            if is_voice:
+                silence_ms = 0
+            else:
+                silence_ms += VOBIZ_FRAME_MS
+            if (silence_ms >= endpoint_ms or utterance_ms >= 5000) and len(audio_buffer) >= sample_rate * 2 // 2:
+                utterance = bytes(audio_buffer)
+                logger.info("Utterance complete: silence_ms=%d utterance_ms=%d buffer=%d bytes, processing...", silence_ms, utterance_ms, len(utterance))
+                audio_buffer.clear()
+                pre_roll_buffer.clear()
+                speech_started = False
+                silence_ms = 0
+                utterance_ms = 0
+                if processing_task and not processing_task.done():
+                    processing_task.cancel()
+                processing_task = asyncio.create_task(process_utterance(utterance))
+
     try:
         while True:
             try:
@@ -2130,68 +2240,38 @@ async def vobiz_stream(websocket: WebSocket):
             except RuntimeError:
                 break
 
-            if raw_message.type == WebSocketDisconnect:
-                print(f"Vobiz websocket disconnected for call={call_id}")
-                break
-
             message = None
-            if raw_message.bytes:
-                logger.info("Vobiz received binary frame: %s bytes", len(raw_message.bytes))
-                message = raw_message.bytes
-            elif raw_message.text:
-                logger.info("Vobiz received text message: %s", raw_message.text[:500])
-                try:
-                    message = json.loads(raw_message.text)
-                except Exception:
-                    message = raw_message.text
+
+            if isinstance(raw_message, dict):
+                msg_type = raw_message.get("type")
+                if msg_type == "websocket.disconnect":
+                    logger.info("Vobiz websocket disconnected for call=%s", call_id)
+                    break
+                elif msg_type == "websocket.receive":
+                    if raw_message.get("bytes"):
+                        message = raw_message["bytes"]
+                    elif raw_message.get("text"):
+                        text_msg = raw_message["text"]
+                        try:
+                            message = json.loads(text_msg)
+                        except Exception as e:
+                            logger.warning("Failed to parse JSON: %s", e)
+                            message = text_msg
+            else:
+                if hasattr(raw_message, 'type') and raw_message.type == WebSocketDisconnect:
+                    logger.info("Vobiz websocket disconnected for call=%s", call_id)
+                    break
+                if hasattr(raw_message, 'bytes') and raw_message.bytes:
+                    message = raw_message.bytes
+                elif hasattr(raw_message, 'text') and raw_message.text:
+                    try:
+                        message = json.loads(raw_message.text)
+                    except Exception:
+                        message = raw_message.text
 
             if isinstance(message, (bytes, bytearray)):
                 payload, track = _extract_vobiz_media_payload(message, media_encoding)
-                logger.info("Vobiz binary payload extracted: bytes=%s, track=%s, encoding=%s", len(payload), track, media_encoding)
-                if not payload:
-                    continue
-                if track != "inbound":
-                    continue
-                frame = _normalize_vobiz_audio(payload, media_encoding)
-                if not frame:
-                    continue
-                media_frames += 1
-                if media_frames == 1:
-                    print(f"First Vobiz media frame received: {len(frame)} bytes, encoding={media_encoding}")
-
-                import struct
-                samples = struct.unpack("<" + "h" * (len(frame) // 2), frame[: len(frame) - len(frame) % 2])
-                if not samples:
-                    continue
-                rms = math.sqrt(sum(sample * sample for sample in samples) / max(len(samples), 1))
-                peak = max(abs(sample) for sample in samples)
-                is_voice = rms > 25 or peak > 80
-                endpoint_ms = int(config_state.get("endpoint_duration") or 600)
-
-                if is_voice and not speech_started:
-                    speech_started = True
-                    silence_ms = 0
-                    if stream_id and agent_speaking:
-                        await websocket.send_json({"event": "clearAudio", "streamId": stream_id})
-                        agent_speaking = False
-                        if greeting_task and not greeting_task.done():
-                            greeting_task.cancel()
-                if speech_started and not agent_speaking:
-                    audio_buffer.extend(frame)
-                    utterance_ms += VOBIZ_FRAME_MS
-                    if is_voice:
-                        silence_ms = 0
-                    else:
-                        silence_ms += VOBIZ_FRAME_MS
-                    if (silence_ms >= endpoint_ms or utterance_ms >= 5000) and len(audio_buffer) >= sample_rate * 2 // 2:
-                        utterance = bytes(audio_buffer)
-                        audio_buffer.clear()
-                        speech_started = False
-                        silence_ms = 0
-                        utterance_ms = 0
-                        if processing_task and not processing_task.done():
-                            processing_task.cancel()
-                        processing_task = asyncio.create_task(process_utterance(utterance))
+                await process_audio_payload(payload, track)
                 continue
 
             event = message.get("event") if isinstance(message, dict) else None
@@ -2212,54 +2292,12 @@ async def vobiz_stream(websocket: WebSocket):
                     "authenticated": True
                 })
                 logger.info("Vobiz stream started: call=%s, stream=%s, encoding=%s, rate=%s", call_id, stream_id, media_encoding, sample_rate)
+                logger.info("Creating greeting task for: %s (stream_id=%s)", PHONE_GREETING[:50], stream_id)
                 greeting_task = asyncio.create_task(speak_to_caller(PHONE_GREETING))
+                logger.info("Greeting task created: %s", greeting_task)
             elif event == "media":
                 payload, track = _extract_vobiz_media_payload(message, media_encoding)
-                if track != "inbound":
-                    continue
-                frame = _normalize_vobiz_audio(payload, media_encoding)
-                if not frame:
-                    continue
-                media_frames += 1
-                if media_frames == 1:
-                    print(f"First Vobiz media frame received: {len(frame)} bytes, encoding={media_encoding}")
-
-                import struct
-                samples = struct.unpack("<" + "h" * (len(frame) // 2), frame[: len(frame) - len(frame) % 2])
-                if not samples:
-                    continue
-                rms = math.sqrt(sum(sample * sample for sample in samples) / max(len(samples), 1))
-                peak = max(abs(sample) for sample in samples)
-                is_voice = rms > 25 or peak > 80
-                endpoint_ms = int(config_state.get("endpoint_duration") or 600)
-                logger.info("Vobiz frame %d: RMS=%.1f peak=%d is_voice=%s (threshold RMS>25 or peak>80)", media_frames, rms, peak, is_voice)
-
-                if is_voice and not speech_started:
-                    speech_started = True
-                    silence_ms = 0
-                    logger.info("Speech detected at frame %d, starting to buffer audio", media_frames)
-                    if stream_id and agent_speaking:
-                        await websocket.send_json({"event": "clearAudio", "streamId": stream_id})
-                        agent_speaking = False
-                        if greeting_task and not greeting_task.done():
-                            greeting_task.cancel()
-                if speech_started and not agent_speaking:
-                    audio_buffer.extend(frame)
-                    utterance_ms += VOBIZ_FRAME_MS
-                    if is_voice:
-                        silence_ms = 0
-                    else:
-                        silence_ms += VOBIZ_FRAME_MS
-                    if (silence_ms >= endpoint_ms or utterance_ms >= 5000) and len(audio_buffer) >= sample_rate * 2 // 2:
-                        utterance = bytes(audio_buffer)
-                        logger.info("Utterance complete: silence_ms=%d utterance_ms=%d buffer=%d bytes, processing...", silence_ms, utterance_ms, len(utterance))
-                        audio_buffer.clear()
-                        speech_started = False
-                        silence_ms = 0
-                        utterance_ms = 0
-                        if processing_task and not processing_task.done():
-                            processing_task.cancel()
-                        processing_task = asyncio.create_task(process_utterance(utterance))
+                await process_audio_payload(payload, track)
             elif event == "playedStream":
                 logger.info("Vobiz stream audio played: %s", message.get('name'))
             elif event == "stop":

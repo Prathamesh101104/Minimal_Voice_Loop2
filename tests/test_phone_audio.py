@@ -37,3 +37,21 @@ def test_extract_vobiz_media_payload_from_bytes():
     media, track = module._extract_vobiz_media_payload(payload, "audio/x-l16")
     assert media == payload
     assert track == "inbound"
+
+
+def test_extract_vobiz_media_payload_from_json_base64_string():
+    import base64
+    raw_audio = b"\x01\x02\x03\x04"
+    b64_str = base64.b64encode(raw_audio).decode("utf-8")
+    msg = {
+        "event": "media",
+        "streamId": "test-stream",
+        "media": {
+            "payload": b64_str,
+            "track": "inbound"
+        }
+    }
+    extracted_bytes, track = module._extract_vobiz_media_payload(msg, "audio/x-l16")
+    assert extracted_bytes == raw_audio
+    assert track == "inbound"
+
