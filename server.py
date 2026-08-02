@@ -1919,8 +1919,29 @@ async def _phone_tts_pcm(text: str, target_sample_rate: int = VOBIZ_STREAM_SAMPL
     if not cleaned:
         return b""
 
-    # Try Gemini native TTS first — this is the key you actually have configured.
-    # NOTE: gemini-2.5-flash does NOT do audio output; you need the dedicated -tts model.
+    # 1. Try OpenAI TTS first (produces direct 24kHz mono PCM16)
+    openai_key = config_state.get("openai_key") or os.environ.get("OpenAI_API_Key") or os.environ.get("OPENAI_API_KEY")
+    if openai_key:
+        try:
+            def _call_openai_tts():
+                from openai import OpenAI
+                client = OpenAI(api_key=openai_key)
+                response = client.audio.speech.create(
+                    model="tts-1",
+                    voice="alloy",
+                    input=cleaned,
+                    response_format="pcm"
+                )
+                return response.content
+
+            audio_bytes = await asyncio.to_thread(_call_openai_tts)
+            if audio_bytes:
+                logger.info("OpenAI TTS generated %d bytes of PCM audio", len(audio_bytes))
+                return resample_pcm(audio_bytes, 24000, target_sample_rate)
+        except Exception as e:
+            logger.warning("OpenAI TTS failed: %s", e)
+
+    # 2. Try Gemini native TTS next
     gemini_key = config_state.get("gemini_key") or os.environ.get("Gemini_API_Key") or os.environ.get("GEMINI_API_KEY")
     if gemini_key:
         try:
@@ -1939,35 +1960,14 @@ async def _phone_tts_pcm(text: str, target_sample_rate: int = VOBIZ_STREAM_SAMPL
             if r.status_code == 200:
                 part = r.json()["candidates"][0]["content"]["parts"][0]
                 pcm_data = base64.b64decode(part["inlineData"]["data"])
-                # Gemini TTS returns 24kHz mono PCM16 — resample down to the phone line's rate.
+                logger.info("Gemini TTS generated %d bytes of PCM audio", len(pcm_data))
                 return resample_pcm(pcm_data, 24000, target_sample_rate)
             else:
                 logger.warning("Gemini TTS failed (%s): %s", r.status_code, r.text[:300])
         except Exception as e:
             logger.warning("Gemini TTS failed: %s", e)
 
-    # Try OpenAI TTS next
-    openai_key = config_state.get("openai_key") or os.environ.get("OpenAI_API_Key") or os.environ.get("OPENAI_API_KEY")
-    if openai_key:
-        try:
-            def _call_openai_tts():
-                from openai import OpenAI
-                client = OpenAI(api_key=openai_key)
-                response = client.audio.speech.create(
-                    model="tts-1",
-                    voice="echo",
-                    input=cleaned,
-                    response_format="pcm"
-                )
-                return response.content
-
-            audio_bytes = await asyncio.to_thread(_call_openai_tts)
-            if audio_bytes:
-                return resample_pcm(audio_bytes, 24000, target_sample_rate)
-        except Exception as e:
-            logger.warning("OpenAI TTS failed: %s", e)
-
-    # Try ElevenLabs TTS as fallback
+    # 3. Try ElevenLabs TTS as fallback
     elevenlabs_key = config_state.get("elevenlabs_key") or os.environ.get("ElevenLabs_API_Key") or os.environ.get("ELEVENLABS_API_KEY")
     if elevenlabs_key:
         try:
@@ -1985,12 +1985,20 @@ async def _phone_tts_pcm(text: str, target_sample_rate: int = VOBIZ_STREAM_SAMPL
         except Exception as e:
             logger.warning("ElevenLabs TTS failed: %s", e)
 
-    # Fallback: silence, to keep the connection alive
-    logger.warning("No TTS service available, generating fallback silence/tone")
+    # 4. Fallback: Generate an audible audio notification tone so caller hears audio response
+    logger.warning("No external TTS service available, generating audible notification tone")
     import struct
-    num_samples = target_sample_rate * 2
-    fallback_audio = struct.pack("<" + "h" * num_samples, *([0] * num_samples))
-    return fallback_audio
+    import math
+    duration_sec = 1.0
+    num_samples = int(target_sample_rate * duration_sec)
+    samples = []
+    freq1, freq2 = 440.0, 880.0
+    for i in range(num_samples):
+        t = i / target_sample_rate
+        freq = freq1 if t < 0.5 else freq2
+        val = int(10000 * math.sin(2 * math.pi * freq * t))
+        samples.append(val)
+    return struct.pack("<" + "h" * num_samples, *samples)
 
 async def _send_vobiz_audio(websocket: WebSocket, stream_id: str, audio: bytes, sample_rate: int):
     import base64
