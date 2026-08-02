@@ -2005,24 +2005,46 @@ async def _phone_tts_pcm(text: str, target_sample_rate: int = VOBIZ_STREAM_SAMPL
 
 async def _send_vobiz_audio(websocket: WebSocket, stream_id: str, audio: bytes, sample_rate: int):
     import base64
+    import struct
 
     if not audio:
         return
     if not stream_id:
         stream_id = "vobiz-stream"
 
+    # Convert Little-Endian PCM16 audio to Big-Endian L16 for telephony PSTN stream
+    be_pcm = bytearray()
+    usable = audio[: len(audio) - len(audio) % 2]
+    for i in range(0, len(usable), 2):
+        val = struct.unpack("<h", usable[i:i + 2])[0]
+        be_pcm.extend(struct.pack(">h", val))
+
     chunk_size = sample_rate * 2 // (1000 // VOBIZ_FRAME_MS)
-    for offset in range(0, len(audio), chunk_size):
-        chunk = audio[offset:offset + chunk_size]
+    for offset in range(0, len(be_pcm), chunk_size):
+        chunk = be_pcm[offset:offset + chunk_size]
+        payload_b64 = base64.b64encode(chunk).decode("utf-8")
+        
+        # Send standard media event (Vobiz/Plivo/Twilio protocol)
+        await websocket.send_json({
+            "event": "media",
+            "streamId": stream_id,
+            "streamSid": stream_id,
+            "media": {
+                "payload": payload_b64
+            }
+        })
+        # Send playAudio event as secondary fallback
         await websocket.send_json({
             "event": "playAudio",
             "streamId": stream_id,
             "media": {
                 "contentType": "audio/x-l16",
                 "sampleRate": sample_rate,
-                "payload": base64.b64encode(chunk).decode()
+                "payload": payload_b64
             }
         })
+        await asyncio.sleep(VOBIZ_FRAME_MS / 1000.0)
+
     await websocket.send_json({
         "event": "checkpoint",
         "streamId": stream_id,
