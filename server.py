@@ -2184,7 +2184,24 @@ async def vobiz_stream(websocket: WebSocket):
     media_encoding = "audio/x-l16"
     media_frames = 0
 
-    async def speak_to_caller(text: str):
+    def _generate_connection_tone(rate: int, duration_ms: int = 500) -> bytes:
+        """Generate a short pleasant connection tone (immediate feedback for caller)."""
+        import struct as _struct
+        import math as _math
+        num_samples = rate * duration_ms // 1000
+        # Two-tone chime: 523Hz (C5) then 659Hz (E5) — pleasant "connected" sound
+        samples = []
+        half = num_samples // 2
+        for i in range(num_samples):
+            t = i / rate
+            freq = 523.0 if i < half else 659.0
+            # Fade in/out to avoid clicks
+            env = min(i / (rate * 0.01), 1.0) * min((num_samples - i) / (rate * 0.01), 1.0)
+            val = int(6000 * env * _math.sin(2 * _math.pi * freq * t))
+            samples.append(max(-32768, min(32767, val)))
+        return _struct.pack("<" + "h" * num_samples, *samples)
+
+    async def speak_to_caller(text: str, send_connection_tone: bool = False):
         nonlocal agent_speaking, stream_id
         current_stream_id = stream_id or "vobiz-stream"
         if not text:
@@ -2193,6 +2210,13 @@ async def vobiz_stream(websocket: WebSocket):
         agent_speaking = True
         logger.info("speak_to_caller: generating TTS for %d char text (stream_id=%s)", len(text), current_stream_id)
         try:
+            # Send an immediate connection tone so caller hears audio instantly
+            # while the Gemini TTS generates in the background (~4-6 seconds)
+            if send_connection_tone:
+                tone = _generate_connection_tone(sample_rate, 400)
+                logger.info("speak_to_caller: sending connection tone: %d bytes", len(tone))
+                await _send_vobiz_audio(websocket, current_stream_id, tone, sample_rate)
+
             response_audio = await _phone_tts_pcm(text, sample_rate)
             if response_audio:
                 logger.info("speak_to_caller: sending audio response: %d bytes", len(response_audio))
@@ -2354,7 +2378,7 @@ async def vobiz_stream(websocket: WebSocket):
                 })
                 logger.info("Vobiz stream started: call=%s, stream=%s, encoding=%s, rate=%s", call_id, stream_id, media_encoding, sample_rate)
                 logger.info("Creating greeting task for: %s (stream_id=%s)", PHONE_GREETING[:50], stream_id)
-                greeting_task = asyncio.create_task(speak_to_caller(PHONE_GREETING))
+                greeting_task = asyncio.create_task(speak_to_caller(PHONE_GREETING, send_connection_tone=True))
                 logger.info("Greeting task created: %s", greeting_task)
             elif event == "media":
                 payload, track = _extract_vobiz_media_payload(message, media_encoding)
