@@ -1833,6 +1833,31 @@ def _vobiz_stream_twiml(host: str) -> str:
 </Response>
 """
 
+@app.get("/api/phone/test-tts")
+async def test_tts_endpoint():
+    """Diagnostic endpoint to test if TTS works on this deployment."""
+    import base64
+    results = {}
+
+    # Check which keys are available
+    gemini_key = config_state.get("gemini_key") or os.environ.get("Gemini_API_Key") or os.environ.get("GEMINI_API_KEY")
+    openai_key = config_state.get("openai_key") or os.environ.get("OpenAI_API_Key") or os.environ.get("OPENAI_API_KEY")
+    results["gemini_key_present"] = bool(gemini_key)
+    results["gemini_key_prefix"] = gemini_key[:12] + "..." if gemini_key else None
+    results["openai_key_present"] = bool(openai_key)
+    results["env_vars"] = {k: v[:8] + "..." for k, v in os.environ.items() if "KEY" in k.upper() or "API" in k.upper() or "GEMINI" in k.upper()}
+
+    # Try TTS
+    try:
+        audio = await _phone_tts_pcm("Hello, this is a test.", VOBIZ_STREAM_SAMPLE_RATE)
+        results["tts_success"] = bool(audio and len(audio) > 100)
+        results["tts_audio_bytes"] = len(audio) if audio else 0
+    except Exception as e:
+        results["tts_success"] = False
+        results["tts_error"] = str(e)
+
+    return results
+
 @app.api_route("/api/phone/incoming-call", methods=["GET", "POST"])
 async def incoming_call(request: Request):
     from fastapi import Response
