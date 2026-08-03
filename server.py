@@ -2058,6 +2058,36 @@ def pcm16_to_mulaw(audio: bytes) -> bytes:
             out.append(ulaw_byte)
         return bytes(out)
 
+def pcm16_to_alaw(pcm_bytes: bytes) -> bytes:
+    """Convert 16-bit PCM Little-Endian audio to 8-bit G.711 a-law (PCMA) for Indian PSTN mobile calls."""
+    try:
+        import audioop
+        return audioop.lin2alaw(pcm_bytes, 2)
+    except Exception:
+        import struct
+        out = bytearray()
+        usable = pcm_bytes[: len(pcm_bytes) - len(pcm_bytes) % 2]
+        for i in range(0, len(usable), 2):
+            pcm_val = struct.unpack("<h", usable[i:i + 2])[0]
+            sign = 0x80 if pcm_val < 0 else 0x00
+            if pcm_val < 0:
+                pcm_val = -pcm_val
+            if pcm_val > 32767:
+                pcm_val = 32767
+            if pcm_val >= 256:
+                exponent = 7
+                for exp in range(7, 0, -1):
+                    if pcm_val & (1 << (exp + 7)):
+                        exponent = exp
+                        break
+                mantissa = (pcm_val >> (exponent + 3)) & 0x0F
+                alaw_byte = (sign | (exponent << 4) | mantissa) ^ 0x55
+            else:
+                mantissa = (pcm_val >> 4) & 0x0F
+                alaw_byte = (sign | mantissa) ^ 0x55
+            out.append(alaw_byte)
+        return bytes(out)
+
 async def _send_vobiz_audio(websocket: WebSocket, stream_id: str, audio: bytes, sample_rate: int):
     import base64
     import struct
@@ -2067,26 +2097,34 @@ async def _send_vobiz_audio(websocket: WebSocket, stream_id: str, audio: bytes, 
     if not stream_id:
         stream_id = "vobiz-stream"
 
-    # 1. Convert Little-Endian PCM16 to G.711 mu-law for PSTN mobile phone carriers
+    # 1. Convert Little-Endian PCM16 to G.711 A-law (PCMA) for Indian mobile phone carriers
+    alaw_pcm = pcm16_to_alaw(audio)
+
+    # 2. Convert Little-Endian PCM16 to G.711 mu-law (PCMU)
     mulaw_pcm = pcm16_to_mulaw(audio)
 
-    # 2. Convert Little-Endian PCM16 to Big-Endian L16
-    be_pcm = bytearray()
-    usable = audio[: len(audio) - len(audio) % 2]
-    for i in range(0, len(usable), 2):
-        val = struct.unpack("<h", usable[i:i + 2])[0]
-        be_pcm.extend(struct.pack(">h", val))
-
-    # Send audio using Plivo playAudio protocol in ~0.5 second chunks
     chunk_duration_ms = 500
-    mulaw_chunk_size = sample_rate * 1 * chunk_duration_ms // 1000  # 1 byte per sample for 8kHz mu-law
+    chunk_size = sample_rate * 1 * chunk_duration_ms // 1000  # 1 byte per sample for 8kHz A-law / mu-law
     total_chunks = 0
 
-    for offset in range(0, len(mulaw_pcm), mulaw_chunk_size):
-        mulaw_chunk = mulaw_pcm[offset:offset + mulaw_chunk_size]
+    for offset in range(0, max(len(alaw_pcm), len(mulaw_pcm)), chunk_size):
+        # Send G.711 A-law (PCMA) chunk (Primary codec for Indian mobile carriers)
+        alaw_chunk = alaw_pcm[offset:offset + chunk_size]
+        if alaw_chunk:
+            payload_alaw_b64 = base64.b64encode(bytes(alaw_chunk)).decode("utf-8")
+            await websocket.send_json({
+                "event": "playAudio",
+                "media": {
+                    "contentType": "audio/x-alaw",
+                    "sampleRate": sample_rate,
+                    "payload": payload_alaw_b64
+                }
+            })
+
+        # Send G.711 mu-law (PCMU) chunk
+        mulaw_chunk = mulaw_pcm[offset:offset + chunk_size]
         if mulaw_chunk:
             payload_mulaw_b64 = base64.b64encode(bytes(mulaw_chunk)).decode("utf-8")
-            # Send playAudio event matching stream contentType="audio/x-mulaw;rate=8000"
             await websocket.send_json({
                 "event": "playAudio",
                 "media": {
@@ -2095,10 +2133,11 @@ async def _send_vobiz_audio(websocket: WebSocket, stream_id: str, audio: bytes, 
                     "payload": payload_mulaw_b64
                 }
             })
-            total_chunks += 1
-            await asyncio.sleep(0.05)
 
-    logger.info("Sent %d playAudio chunks (mu-law %d bytes) to stream %s", total_chunks, len(mulaw_pcm), stream_id)
+        total_chunks += 1
+        await asyncio.sleep(0.05)
+
+    logger.info("Sent %d playAudio chunks (A-law %d bytes, mu-law %d bytes) to stream %s", total_chunks, len(alaw_pcm), len(mulaw_pcm), stream_id)
 
     await websocket.send_json({
         "event": "checkpoint",
