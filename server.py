@@ -1828,7 +1828,7 @@ def _vobiz_stream_twiml(host: str) -> str:
     return f"""<?xml version="1.0" encoding="UTF-8"?>
 <Response>
     <Stream bidirectional="true" keepCallAlive="true" audioTrack="inbound"
-            contentType="audio/x-l16;rate=8000" streamTimeout="3600">
+            contentType="audio/x-mulaw;rate=8000" streamTimeout="3600">
         {stream_url}
     </Stream>
 </Response>
@@ -2079,16 +2079,14 @@ async def _send_vobiz_audio(websocket: WebSocket, stream_id: str, audio: bytes, 
 
     # Send audio using Plivo playAudio protocol in ~0.5 second chunks
     chunk_duration_ms = 500
-    mulaw_chunk_size = sample_rate * 1 * chunk_duration_ms // 1000  # 1 byte per sample for mu-law
-    l16_chunk_size = sample_rate * 2 * chunk_duration_ms // 1000    # 2 bytes per sample for L16
+    mulaw_chunk_size = sample_rate * 1 * chunk_duration_ms // 1000  # 1 byte per sample for 8kHz mu-law
     total_chunks = 0
 
-    offsets = range(0, max(len(mulaw_pcm), len(be_pcm)), mulaw_chunk_size)
-    for idx, offset in enumerate(offsets):
-        # Send G.711 mu-law chunk (Mobile PSTN carrier standard)
+    for offset in range(0, len(mulaw_pcm), mulaw_chunk_size):
         mulaw_chunk = mulaw_pcm[offset:offset + mulaw_chunk_size]
         if mulaw_chunk:
             payload_mulaw_b64 = base64.b64encode(bytes(mulaw_chunk)).decode("utf-8")
+            # Send playAudio event matching stream contentType="audio/x-mulaw;rate=8000"
             await websocket.send_json({
                 "event": "playAudio",
                 "media": {
@@ -2097,25 +2095,10 @@ async def _send_vobiz_audio(websocket: WebSocket, stream_id: str, audio: bytes, 
                     "payload": payload_mulaw_b64
                 }
             })
+            total_chunks += 1
+            await asyncio.sleep(0.05)
 
-        # Send Big-Endian L16 chunk (as secondary fallback)
-        l16_offset = idx * l16_chunk_size
-        l16_chunk = be_pcm[l16_offset:l16_offset + l16_chunk_size]
-        if l16_chunk:
-            payload_l16_b64 = base64.b64encode(bytes(l16_chunk)).decode("utf-8")
-            await websocket.send_json({
-                "event": "playAudio",
-                "media": {
-                    "contentType": "audio/x-l16",
-                    "sampleRate": sample_rate,
-                    "payload": payload_l16_b64
-                }
-            })
-
-        total_chunks += 1
-        await asyncio.sleep(0.05)
-
-    logger.info("Sent %d playAudio chunks (mu-law %d bytes, L16 %d bytes) to stream %s", total_chunks, len(mulaw_pcm), len(be_pcm), stream_id)
+    logger.info("Sent %d playAudio chunks (mu-law %d bytes) to stream %s", total_chunks, len(mulaw_pcm), stream_id)
 
     await websocket.send_json({
         "event": "checkpoint",
