@@ -1827,7 +1827,8 @@ def _vobiz_stream_twiml(host: str) -> str:
     stream_url = f"wss://{host}/api/phone/vobiz-stream"
     return f"""<?xml version="1.0" encoding="UTF-8"?>
 <Response>
-    <Stream bidirectional="true" keepCallAlive="true" audioTrack="inbound" streamTimeout="3600">
+    <Stream bidirectional="true" keepCallAlive="true" audioTrack="inbound"
+            contentType="audio/x-l16;rate=8000" streamTimeout="3600">
         {stream_url}
     </Stream>
 </Response>
@@ -2044,31 +2045,30 @@ async def _send_vobiz_audio(websocket: WebSocket, stream_id: str, audio: bytes, 
         val = struct.unpack("<h", usable[i:i + 2])[0]
         be_pcm.extend(struct.pack(">h", val))
 
-    chunk_size = sample_rate * 2 // (1000 // VOBIZ_FRAME_MS)
+    # Send audio using Plivo playAudio protocol in ~0.5 second chunks
+    # Plivo bidirectional streams expect playAudio events with base64 audio payload
+    chunk_duration_ms = 500
+    chunk_size = sample_rate * 2 * chunk_duration_ms // 1000  # bytes per chunk
+    total_chunks = 0
+
     for offset in range(0, len(be_pcm), chunk_size):
         chunk = be_pcm[offset:offset + chunk_size]
-        payload_b64 = base64.b64encode(chunk).decode("utf-8")
-        
-        # Send standard media event (Vobiz/Plivo/Twilio protocol)
-        await websocket.send_json({
-            "event": "media",
-            "streamId": stream_id,
-            "streamSid": stream_id,
-            "media": {
-                "payload": payload_b64
-            }
-        })
-        # Send playAudio event as secondary fallback
+        payload_b64 = base64.b64encode(bytes(chunk)).decode("utf-8")
+
+        # Send playAudio event per Plivo documentation
         await websocket.send_json({
             "event": "playAudio",
-            "streamId": stream_id,
             "media": {
                 "contentType": "audio/x-l16",
                 "sampleRate": sample_rate,
                 "payload": payload_b64
             }
         })
-        await asyncio.sleep(VOBIZ_FRAME_MS / 1000.0)
+        total_chunks += 1
+        # Small delay between chunks to avoid overwhelming the buffer
+        await asyncio.sleep(0.05)
+
+    logger.info("Sent %d playAudio chunks (%d bytes total) to stream %s", total_chunks, len(be_pcm), stream_id)
 
     await websocket.send_json({
         "event": "checkpoint",
