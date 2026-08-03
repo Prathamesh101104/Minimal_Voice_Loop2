@@ -1,0 +1,989 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nimbus - Voice Agent Developer Playground</title>
+  <!-- Load Inter font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <!-- Load standard styles -->
+  <link rel="stylesheet" href="assets/styles.css">
+  <!-- Load Chart.js for visualizations -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  
+  <style>
+    :root {
+      --bg-dark: #090b11;
+      --panel-bg: rgba(18, 22, 35, 0.7);
+      --glass-border: rgba(255, 255, 255, 0.08);
+      --neon-blue: #00f2fe;
+      --neon-purple: #4facfe;
+      --neon-green: #39ff14;
+      --text-muted: #8b9bb4;
+    }
+
+    body {
+      background-color: var(--bg-dark);
+      color: #f1f5f9;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    .playground-container {
+      margin-top: 100px;
+      margin-bottom: 50px;
+      padding: 0 2rem;
+    }
+
+    .pg-title {
+      font-family: 'Outfit', sans-serif;
+      font-size: 2.8rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, var(--neon-blue), #9b51e0);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 0.5rem;
+      text-shadow: 0 0 30px rgba(0, 242, 254, 0.15);
+    }
+
+    .pg-subtitle {
+      color: var(--text-muted);
+      font-size: 1.1rem;
+      margin-bottom: 2rem;
+    }
+
+    /* Bento Grid Dashboard Layout */
+    .pg-grid {
+      display: grid;
+      grid-template-columns: 360px 1fr 400px;
+      gap: 1.5rem;
+      align-items: stretch;
+    }
+
+    @media (max-width: 1400px) {
+      .pg-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .glass-panel {
+      background: var(--panel-bg);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid var(--glass-border);
+      border-radius: 16px;
+      padding: 1.5rem;
+      box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+      display: flex;
+      flex-direction: column;
+      gap: 1.2rem;
+    }
+
+    .panel-header {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: #ffffff;
+      border-bottom: 1px solid var(--glass-border);
+      padding-bottom: 0.8rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .panel-header span {
+      background: linear-gradient(90deg, var(--neon-blue), var(--neon-purple));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    /* Form Controls styling */
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+    }
+
+    .form-group label {
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: #cbd5e1;
+    }
+
+    .input-glass {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--glass-border);
+      border-radius: 8px;
+      color: #ffffff;
+      padding: 0.6rem 0.8rem;
+      font-size: 0.9rem;
+      outline: none;
+      transition: all 0.3s ease;
+    }
+
+    .input-glass:focus {
+      border-color: var(--neon-blue);
+      box-shadow: 0 0 10px rgba(0, 242, 254, 0.2);
+    }
+
+    select.input-glass {
+      appearance: none;
+      background-image: url("data:image/svg+xml;utf8,<svg fill='white' height='24' viewBox='0 0 24 24' width='24' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/><path d='M0 0h24v24H0z' fill='none'/></svg>");
+      background-repeat: no-repeat;
+      background-position: right 10px center;
+      padding-right: 30px;
+    }
+
+    /* Slider / Switch styling */
+    .slider-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.9rem;
+    }
+
+    .slider-input {
+      width: 100%;
+      height: 6px;
+      border-radius: 3px;
+      background: rgba(255, 255, 255, 0.1);
+      outline: none;
+      -webkit-appearance: none;
+    }
+
+    .slider-input::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: var(--neon-blue);
+      cursor: pointer;
+      box-shadow: 0 0 8px var(--neon-blue);
+    }
+
+    .toggle-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.4rem 0;
+    }
+
+    .switch {
+      position: relative;
+      display: inline-block;
+      width: 44px;
+      height: 22px;
+    }
+
+    .switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .slider-toggle {
+      position: absolute;
+      cursor: pointer;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background-color: rgba(255, 255, 255, 0.1);
+      transition: .3s;
+      border-radius: 34px;
+      border: 1px solid var(--glass-border);
+    }
+
+    .slider-toggle:before {
+      position: absolute;
+      content: "";
+      height: 14px;
+      width: 14px;
+      left: 3px;
+      bottom: 3px;
+      background-color: white;
+      transition: .3s;
+      border-radius: 50%;
+    }
+
+    input:checked + .slider-toggle {
+      background-color: #0d9488;
+    }
+
+    input:checked + .slider-toggle:before {
+      transform: translateX(22px);
+      background-color: var(--neon-blue);
+    }
+
+    /* Tool Checkbox List */
+    .tool-list {
+      max-height: 150px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      border: 1px solid var(--glass-border);
+      border-radius: 8px;
+      padding: 0.6rem;
+      background: rgba(0, 0, 0, 0.2);
+    }
+
+    .tool-checkbox {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      font-size: 0.85rem;
+      cursor: pointer;
+    }
+
+    .tool-checkbox input {
+      accent-color: var(--neon-blue);
+    }
+
+    /* Voice / Conversation Console styling */
+    .console-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.3rem 0.8rem;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--glass-border);
+    }
+
+    .status-badge.connected {
+      color: var(--neon-blue);
+      border-color: rgba(0, 242, 254, 0.3);
+      box-shadow: 0 0 10px rgba(0, 242, 254, 0.1);
+    }
+
+    .status-badge.disconnected {
+      color: #ef4444;
+      border-color: rgba(239, 68, 68, 0.3);
+    }
+
+    .status-badge.listening {
+      color: var(--neon-green);
+      border-color: rgba(57, 255, 20, 0.3);
+      box-shadow: 0 0 10px rgba(57, 255, 20, 0.15);
+      animation: pulse 1.5s infinite;
+    }
+
+    .status-badge.thinking {
+      color: #f59e0b;
+      border-color: rgba(245, 158, 11, 0.3);
+    }
+
+    .status-badge.speaking {
+      color: #a855f7;
+      border-color: rgba(168, 85, 247, 0.3);
+      box-shadow: 0 0 10px rgba(168, 85, 247, 0.15);
+    }
+
+    /* Animated pulse */
+    @keyframes pulse {
+      0% { opacity: 0.7; }
+      50% { opacity: 1; }
+      100% { opacity: 0.7; }
+    }
+
+    .chat-box {
+      height: 380px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      padding: 0.5rem;
+      border-radius: 8px;
+      background: rgba(0, 0, 0, 0.15);
+      border: 1px solid var(--glass-border);
+    }
+
+    .msg-row {
+      display: flex;
+      flex-direction: column;
+      max-width: 80%;
+    }
+
+    .msg-row.user {
+      align-self: flex-end;
+    }
+
+    .msg-row.agent {
+      align-self: flex-start;
+    }
+
+    .msg-bubble {
+      padding: 0.8rem 1rem;
+      border-radius: 12px;
+      font-size: 0.95rem;
+      line-height: 1.4;
+    }
+
+    .msg-row.user .msg-bubble {
+      background: linear-gradient(135deg, #0d9488, #0f766e);
+      color: #ffffff;
+      border-bottom-right-radius: 2px;
+    }
+
+    .msg-row.agent .msg-bubble {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--glass-border);
+      color: #f1f5f9;
+      border-bottom-left-radius: 2px;
+    }
+
+    .msg-meta {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-top: 0.2rem;
+      padding: 0 0.3rem;
+    }
+
+    .msg-row.user .msg-meta {
+      align-self: flex-end;
+    }
+
+    /* Cart Widget */
+    .cart-summary {
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid var(--glass-border);
+      border-radius: 12px;
+      padding: 1rem;
+    }
+
+    .cart-summary h4 {
+      margin: 0 0 0.8rem 0;
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: #ffffff;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .cart-item-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.85rem;
+      color: #cbd5e1;
+      padding: 0.3rem 0;
+      border-bottom: 1px dashed rgba(255, 255, 255, 0.05);
+    }
+
+    .cart-item-row:last-child {
+      border-bottom: none;
+    }
+
+    /* Controls band */
+    .console-controls {
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .btn-mic {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--neon-blue), var(--neon-purple));
+      border: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: 0 4px 20px rgba(0, 242, 254, 0.3);
+      position: relative;
+      transition: all 0.3s ease;
+    }
+
+    .btn-mic svg {
+      width: 24px;
+      height: 24px;
+      fill: none;
+      stroke: #ffffff;
+      stroke-width: 2.2;
+    }
+
+    .btn-mic:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 30px rgba(0, 242, 254, 0.6);
+    }
+
+    .btn-mic.recording {
+      background: #ef4444;
+      box-shadow: 0 0 30px rgba(239, 68, 68, 0.6);
+      animation: pulse-ring 1.5s infinite;
+    }
+
+    @keyframes pulse-ring {
+      0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4); }
+      70% { box-shadow: 0 0 0 15px rgba(239, 68, 68, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+    }
+
+    /* Interactive visuals column */
+    .chart-container {
+      position: relative;
+      width: 100%;
+      height: 220px;
+    }
+
+    .rag-legend {
+      display: flex;
+      gap: 1rem;
+      font-size: 0.75rem;
+      justify-content: center;
+      margin-top: 0.5rem;
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+    }
+
+    .legend-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+    }
+
+    /* Streaming Scoreboard */
+    .lat-compare-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.8rem;
+    }
+
+    .scorecard {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--glass-border);
+      border-radius: 8px;
+      padding: 0.8rem;
+      text-align: center;
+    }
+
+    .scorecard div {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+
+    .scorecard strong {
+      font-size: 1.4rem;
+      color: #ffffff;
+      font-family: 'Outfit', sans-serif;
+    }
+
+    /* Tabs for Phone Call Simulator */
+    .tabs-row {
+      display: flex;
+      border-bottom: 1px solid var(--glass-border);
+    }
+
+    .tab-btn {
+      padding: 0.6rem 1.2rem;
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+      font-size: 0.9rem;
+      font-weight: 500;
+      position: relative;
+    }
+
+    .tab-btn.active {
+      color: var(--neon-blue);
+    }
+
+    .tab-btn.active:after {
+      content: "";
+      position: absolute;
+      bottom: -1px; left: 0; right: 0;
+      height: 2px;
+      background: var(--neon-blue);
+    }
+
+    /* Phone Simulator layout */
+    .phone-body {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      align-items: center;
+    }
+
+    .phone-pad {
+      display: grid;
+      grid-template-columns: repeat(3, 60px);
+      gap: 0.6rem;
+      margin-top: 1rem;
+    }
+
+    .phone-key {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--glass-border);
+      color: #ffffff;
+      font-size: 1.2rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s ease;
+    }
+
+    .phone-key:hover {
+      background: rgba(255, 255, 255, 0.12);
+      border-color: var(--neon-blue);
+    }
+
+    .phone-key:active {
+      transform: scale(0.95);
+    }
+
+    .phone-status {
+      font-size: 0.85rem;
+      color: var(--neon-blue);
+      height: 20px;
+    }
+
+    .btn-call {
+      width: 100%;
+      padding: 0.8rem;
+      border-radius: 8px;
+      border: none;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .btn-call.dial {
+      background: #0d9488;
+      color: white;
+    }
+
+    .btn-call.hangup {
+      background: #ef4444;
+      color: white;
+    }
+
+    /* RAG Chunks Inspector */
+    .chunks-inspector {
+      font-size: 0.8rem;
+      background: rgba(0, 0, 0, 0.3);
+      border: 1px solid var(--glass-border);
+      border-radius: 8px;
+      padding: 0.8rem;
+      max-height: 130px;
+      overflow-y: auto;
+    }
+
+    /* Custom scrollbar */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.15);
+      border-radius: 3px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: rgba(255, 255, 255, 0.3);
+    }
+  </style>
+</head>
+<body class="pg-body">
+
+  <div class="playground-container">
+    <div style="display: flex; justify-content: space-between; align-items: flex-end;">
+      <div>
+        <h1 class="pg-title">Nimbus Voice Agent</h1>
+        <p class="pg-subtitle">Developer Playground & Simulation Suite</p>
+      </div>
+      <a href="index.html" class="btn btn-ghost" style="margin-bottom: 2rem;">Back to Nimbus site</a>
+    </div>
+
+    <div class="pg-grid">
+      
+      <!-- Panel 1: Settings Panel -->
+      <section class="glass-panel" aria-label="Settings Panel">
+        <header class="panel-header"><span>Configuration Hub</span></header>
+        
+        <!-- API Keys -->
+        <details style="border-bottom: 1px solid var(--glass-border); padding-bottom: 1rem;">
+          <summary style="cursor: pointer; font-size: 0.9rem; font-weight: 600; color: #cbd5e1;">API Keys Configuration</summary>
+          <div style="display: flex; flex-direction: column; gap: 0.8rem; margin-top: 0.8rem;">
+            <div class="form-group">
+              <label for="openai-key">OpenAI API Key</label>
+              <input type="password" id="openai-key" class="input-glass" placeholder="sk-...">
+            </div>
+            <div class="form-group">
+              <label for="gemini-key">Gemini API Key</label>
+              <input type="password" id="gemini-key" class="input-glass" placeholder="AIzaSy...">
+            </div>
+            <div class="form-group">
+              <label for="elevenlabs-key">ElevenLabs API Key</label>
+              <input type="password" id="elevenlabs-key" class="input-glass" placeholder="eleven_...">
+            </div>
+            <div class="form-group">
+              <label for="backend-url">Backend Server URL</label>
+              <input type="text" id="backend-url" class="input-glass" placeholder="http://127.0.0.1:8000" value="http://127.0.0.1:8000">
+            </div>
+            <button id="save-keys-btn" class="btn btn-ghost btn-sm" style="margin-top: 0.4rem;">Save Keys / Config</button>
+          </div>
+        </details>
+
+        <!-- Pipeline Providers -->
+        <div class="form-group">
+          <label for="asr-select">ASR (Speech-to-Text)</label>
+          <select id="asr-select" class="input-glass">
+            <option value="browser">Browser Native Speech (Free)</option>
+            <option value="openai">OpenAI Whisper-1 (API)</option>
+            <option value="gemini">Gemini native (API)</option>
+            <option value="elevenlabs">ElevenLabs Scribe (API)</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="llm-select">Reasoning Layer (LLM)</label>
+          <select id="llm-select" class="input-glass">
+            <option value="openai">OpenAI GPT-4o-mini</option>
+            <option value="gemini">Gemini 2.5 Flash</option>
+            <option value="anthropic">Anthropic Claude-3.5-Haiku</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="tts-select">TTS (Text-to-Speech)</label>
+          <select id="tts-select" class="input-glass">
+            <option value="browser">Browser Native Speech (Free)</option>
+            <option value="openai">OpenAI TTS-1 (Alloy)</option>
+            <option value="gemini">Gemini native (API)</option>
+            <option value="elevenlabs">ElevenLabs (API)</option>
+          </select>
+        </div>
+
+        <!-- Mode Selectors -->
+        <div class="toggle-row">
+          <span>RAG Retrieval</span>
+          <label class="switch">
+            <input type="checkbox" id="rag-toggle" checked>
+            <span class="slider-toggle"></span>
+          </label>
+        </div>
+
+        <div class="toggle-row">
+          <span>Streaming Output</span>
+          <label class="switch">
+            <input type="checkbox" id="streaming-toggle" checked>
+            <span class="slider-toggle"></span>
+          </label>
+        </div>
+
+        <!-- Checkbox grid for Dynamic Tools Selection -->
+        <div class="form-group">
+          <label>Voice Agent Active Tools</label>
+          <div class="tool-list">
+            <label class="tool-checkbox">
+              <input type="checkbox" value="add_to_cart" checked> Add to Cart
+            </label>
+            <label class="tool-checkbox">
+              <input type="checkbox" value="remove_from_cart" checked> Remove from Cart
+            </label>
+            <label class="tool-checkbox">
+              <input type="checkbox" value="clear_cart" checked> Clear Cart
+            </label>
+            <label class="tool-checkbox">
+              <input type="checkbox" value="view_cart" checked> View Cart Items
+            </label>
+            <label class="tool-checkbox">
+              <input type="checkbox" value="get_cart_total" checked> Cart Total
+            </label>
+            <label class="tool-checkbox">
+              <input type="checkbox" value="checkout_cart" checked> Checkout Entire Cart
+            </label>
+            <label class="tool-checkbox">
+              <input type="checkbox" value="checkout_single_item" checked> Checkout Item
+            </label>
+            <label class="tool-checkbox">
+              <input type="checkbox" value="calculate_annual_pricing" checked> Calculate Annual Rate
+            </label>
+            <label class="tool-checkbox">
+              <input type="checkbox" value="calculate_annual_savings" checked> Pricing Savings
+            </label>
+            <label class="tool-checkbox">
+              <input type="checkbox" value="sort_products" checked> Sort Products
+            </label>
+            <label class="tool-checkbox">
+              <input type="checkbox" value="get_top_k_expensive_products" checked> Top K Expensive
+            </label>
+            <label class="tool-checkbox">
+              <input type="checkbox" value="product_info" checked> Product Details Lookup
+            </label>
+          </div>
+        </div>
+
+        <!-- Sliders -->
+        <div class="form-group">
+          <div class="slider-container">
+            <label for="top-k-slider">Top-K retrieved chunks</label>
+            <span id="top-k-val">3</span>
+          </div>
+          <input type="range" id="top-k-slider" class="slider-input" min="1" max="10" value="3">
+        </div>
+
+        <div class="form-group">
+          <div class="slider-container">
+            <label for="endpoint-slider">Silence detection endpoint</label>
+            <span id="endpoint-val">800 ms</span>
+          </div>
+          <input type="range" id="endpoint-slider" class="slider-input" min="300" max="2000" step="50" value="800">
+        </div>
+
+        <div class="form-group">
+          <div class="slider-container">
+            <label for="verbatim-slider">Verbatim memory count</label>
+            <span id="verbatim-val">3 turns</span>
+          </div>
+          <input type="range" id="verbatim-slider" class="slider-input" min="1" max="10" value="3">
+        </div>
+
+        <!-- System Prompt -->
+        <div class="form-group">
+          <label for="prompt-textarea">System Prompt override</label>
+          <textarea id="prompt-textarea" class="input-glass" style="height: 100px; resize: none; font-size: 0.8rem;"></textarea>
+        </div>
+
+        <!-- Response Length -->
+        <div class="form-group">
+          <label for="len-select">Reasoning response length</label>
+          <select id="len-select" class="input-glass">
+            <option value="low">Low (1-10 words)</option>
+            <option value="medium" selected>Medium (10-25 words)</option>
+            <option value="high">High (25-80 words)</option>
+          </select>
+        </div>
+
+        <button id="apply-settings-btn" class="btn btn-primary" style="margin-top: 0.5rem;">Apply Settings</button>
+      </section>
+
+      <!-- Panel 2: Live Interaction console -->
+      <main class="glass-panel" aria-label="Live Interaction Console" style="gap: 1.5rem;">
+        <header class="panel-header">
+          <span>Interaction Hub</span>
+          <div id="status-badge" class="status-badge disconnected">Offline</div>
+        </header>
+
+        <!-- Dynamic Chat Area -->
+        <div id="chat-box" class="chat-box">
+          <div class="msg-row agent">
+            <div class="msg-bubble">Welcome to the Nimbus voice developer loop. Select your configuration options in the settings dashboard. Click the microphone button below, allow browser mic permissions, and start speaking. Try saying: "Can you add Nimbus CRM professional to my cart?"</div>
+            <div class="msg-meta">Agent &middot; Just now</div>
+          </div>
+        </div>
+
+        <!-- Mini Cart Status -->
+        <section class="cart-summary" aria-label="Shopping Cart">
+          <h4><span>Live Shopping Cart</span> <strong id="cart-price-badge">$0/mo</strong></h4>
+          <div id="cart-items-list" style="max-height: 100px; overflow-y: auto;">
+            <div class="cart-empty" style="font-size: 0.85rem; color: var(--text-muted); text-align: center; padding: 0.5rem 0;">Cart is empty</div>
+          </div>
+        </section>
+
+        <!-- Audio Output Buffer toggle & Info -->
+        <div class="toggle-row" style="background: rgba(255,255,255,0.02); padding: 0.6rem; border-radius: 8px; border: 1px solid var(--glass-border);">
+          <div style="display: flex; flex-direction: column;">
+            <span style="font-size: 0.85rem; font-weight: 600;">Text-to-Speech Buffer Queue</span>
+            <small style="font-size: 0.72rem; color: var(--text-muted);">Saves audio packet queue to prevent choppy network playbacks.</small>
+          </div>
+          <label class="switch">
+            <input type="checkbox" id="buffer-toggle" checked>
+            <span class="slider-toggle"></span>
+          </label>
+        </div>
+
+        <!-- Controls (Push-to-Talk Mic) -->
+        <div class="console-controls">
+          <button id="mic-btn" class="btn-mic" aria-label="Toggle microphone activation">
+            <!-- SVG Mic -->
+            <svg viewBox="0 0 24 24">
+              <rect x="9" y="2" width="6" height="11" rx="3"></rect>
+              <path d="M5 10a7 7 0 0 0 14 0"></path>
+              <line x1="12" y1="17" x2="12" y2="21"></line>
+              <line x1="8" y1="21" x2="16" y2="21"></line>
+            </svg>
+          </button>
+        </div>
+      </main>
+
+      <!-- Panel 3: Visualizer & Phone Call Simulator Column -->
+      <section class="glass-panel" aria-label="Visualizations and Simulation Panel" style="gap: 1.5rem;">
+        <nav class="tabs-row">
+          <button id="tab-visuals" class="tab-btn active">Analytics</button>
+          <button id="tab-phone" class="tab-btn">Phone Simulator</button>
+        </nav>
+
+        <!-- Tab 1: Visuals -->
+        <div id="panel-visuals" style="display: flex; flex-direction: column; gap: 1.2rem;">
+          <div>
+            <h3 style="font-size: 1rem; margin: 0 0 0.5rem 0; font-weight: 600;">RAG Embeddings Cluster Map (PCA)</h3>
+            <div class="chart-container">
+              <canvas id="ragScatterChart"></canvas>
+            </div>
+            <div class="rag-legend">
+              <div class="legend-item"><span class="legend-dot" style="background-color: #3b82f6;"></span>Product</div>
+              <div class="legend-item"><span class="legend-dot" style="background-color: #10b981;"></span>Policy</div>
+              <div class="legend-item"><span class="legend-dot" style="background-color: #8b5cf6;"></span>FAQ</div>
+              <div class="legend-item"><span class="legend-dot" style="background-color: #ef4444; border-radius: 0;"></span>Query</div>
+            </div>
+          </div>
+
+          <!-- RAG Inspector -->
+          <div>
+            <h3 style="font-size: 0.85rem; margin: 0 0 0.4rem 0; font-weight: 600;">Top Retrieved Chunks</h3>
+            <div id="chunks-inspector" class="chunks-inspector">
+              <div style="color: var(--text-muted); font-style: italic;">No query executed yet. Nodes will show here.</div>
+            </div>
+          </div>
+
+          <!-- Latency breakdown -->
+          <div>
+            <h3 style="font-size: 1rem; margin: 0 0 0.5rem 0; font-weight: 600; text-transform: uppercase;">Latency breakdown</h3>
+            <div class="chart-container" style="height: 180px; position: relative; display: flex; justify-content: center; align-items: center; margin-bottom: 1rem;">
+              <canvas id="latencyDoughnutChart"></canvas>
+              <div style="position: absolute; text-align: center; pointer-events: none;">
+                <span id="latency-total-value" style="font-size: 1.5rem; font-weight: 700; display: block; color: #fff; line-height: 1.2;">0</span>
+                <span style="font-size: 0.65rem; color: var(--text-muted); text-transform: uppercase; display: block; margin-top: -2px;">ms total (last turn)</span>
+              </div>
+            </div>
+            
+            <!-- Legends list -->
+            <div style="display: flex; flex-direction: column; gap: 0.35rem; font-size: 0.8rem; margin-bottom: 0.8rem;">
+              <div style="display: flex; justify-content: space-between;">
+                <div style="display: flex; align-items: center; gap: 0.4rem;">
+                  <span style="display: inline-block; width: 8px; height: 8px; background-color: rgb(0, 242, 254); border-radius: 2px;"></span>
+                  <span>ASR</span>
+                </div>
+                <strong id="legend-asr">0 ms (0%)</strong>
+              </div>
+              <div style="display: flex; justify-content: space-between;">
+                <div style="display: flex; align-items: center; gap: 0.4rem;">
+                  <span style="display: inline-block; width: 8px; height: 8px; background-color: rgb(168, 85, 247); border-radius: 2px;"></span>
+                  <span>RAG</span>
+                </div>
+                <strong id="legend-rag">0 ms (0%)</strong>
+              </div>
+              <div style="display: flex; justify-content: space-between;">
+                <div style="display: flex; align-items: center; gap: 0.4rem;">
+                  <span style="display: inline-block; width: 8px; height: 8px; background-color: rgb(79, 172, 254); border-radius: 2px;"></span>
+                  <span>LLM</span>
+                </div>
+                <strong id="legend-llm">0 ms (0%)</strong>
+              </div>
+              <div style="display: flex; justify-content: space-between;">
+                <div style="display: flex; align-items: center; gap: 0.4rem;">
+                  <span style="display: inline-block; width: 8px; height: 8px; background-color: rgb(57, 255, 20); border-radius: 2px;"></span>
+                  <span>Tools</span>
+                </div>
+                <strong id="legend-tools">0 ms (0%)</strong>
+              </div>
+              <div style="display: flex; justify-content: space-between;">
+                <div style="display: flex; align-items: center; gap: 0.4rem;">
+                  <span style="display: inline-block; width: 8px; height: 8px; background-color: rgb(245, 158, 11); border-radius: 2px;"></span>
+                  <span>TTS</span>
+                </div>
+                <strong id="legend-tts">0 ms (0%)</strong>
+              </div>
+              <div style="display: flex; justify-content: space-between;">
+                <div style="display: flex; align-items: center; gap: 0.4rem;">
+                  <span style="display: inline-block; width: 8px; height: 8px; background-color: rgb(236, 72, 153); border-radius: 2px;"></span>
+                  <span>Buffer</span>
+                </div>
+                <strong id="legend-buffer">0 ms (0%)</strong>
+              </div>
+            </div>
+
+            <!-- Time to first audio section -->
+            <div style="border-top: 1px solid rgba(255, 255, 255, 0.1); padding-top: 0.6rem; margin-top: 0.6rem;">
+              <h4 style="font-size: 0.8rem; margin: 0 0 0.4rem 0; font-weight: 600; color: #fff;">Time to first audio</h4>
+              <div style="display: flex; justify-content: space-between; font-size: 0.7rem; color: var(--text-muted); margin-bottom: 0.2rem; text-transform: uppercase;">
+                <span>Mode</span>
+                <span>TTFA</span>
+              </div>
+              <div style="display: flex; justify-content: space-between; font-size: 0.8rem; margin-bottom: 0.2rem;">
+                <span>Batch</span>
+                <strong id="ttfa-batch-val">-</strong>
+              </div>
+              <div style="display: flex; justify-content: space-between; font-size: 0.8rem;">
+                <span>Streaming</span>
+                <strong id="ttfa-stream-val">-</strong>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tab 2: Phone Simulator -->
+        <div id="panel-phone" style="display: none; flex-direction: column; gap: 1.2rem;">
+          <div class="phone-body">
+            <h3 style="font-size: 1.1rem; margin: 0; font-weight: 600; text-align: center;">Nimbus Public Phone Line</h3>
+            <p style="font-size: 0.8rem; color: var(--text-muted); text-align: center; margin: 0;">Dial (+1) 800-555-0142 to connect with support. Secure additions and checkouts will request code OTP authentication.</p>
+            
+            <div style="width: 100%; display: flex; flex-direction: column; gap: 0.3rem;">
+              <input type="text" id="phone-number-display" class="input-glass" value="+1 (800) 555-0142" style="text-align: center; font-size: 1.3rem; letter-spacing: 1px; font-weight: 600;" readonly>
+              <div id="phone-status" class="phone-status" style="text-align: center; font-weight: 500;">Idle</div>
+            </div>
+
+            <!-- Dial buttons -->
+            <button id="phone-call-btn" class="btn-call dial">Call Nimbus Line</button>
+
+            <!-- Phone numeric keypad -->
+            <div class="phone-pad">
+              <button class="phone-key" data-val="1">1</button>
+              <button class="phone-key" data-val="2">2</button>
+              <button class="phone-key" data-val="3">3</button>
+              <button class="phone-key" data-val="4">4</button>
+              <button class="phone-key" data-val="5">5</button>
+              <button class="phone-key" data-val="6">6</button>
+              <button class="phone-key" data-val="7">7</button>
+              <button class="phone-key" data-val="8">8</button>
+              <button class="phone-key" data-val="9">9</button>
+              <button class="phone-key" data-val="*">*</button>
+              <button class="phone-key" data-val="0">0</button>
+              <button class="phone-key" data-val="#">#</button>
+            </div>
+            
+            <!-- Speaking Simulation inside phone -->
+            <div style="width: 100%; border-top: 1px solid var(--glass-border); padding-top: 1rem; display: flex; flex-direction: column; gap: 0.5rem;">
+              <label style="font-size: 0.8rem; font-weight: 600; color: #cbd5e1;">Simulate speaking to call operator</label>
+              <div style="display: flex; gap: 0.5rem;">
+                <input type="text" id="phone-voice-input" class="input-glass" placeholder="Speak or type phone command..." style="flex: 1;" disabled>
+                <button id="phone-mic-btn" class="btn" style="padding: 0.5rem 0.8rem; background: rgba(239, 68, 68, 0.2); border: 1px solid rgba(239, 68, 68, 0.4); color: #f87171;" disabled title="Speak with microphone">🎤 Mic</button>
+                <button id="phone-voice-send" class="btn btn-primary" style="padding: 0.5rem 1rem;" disabled>Send</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </section>
+
+    </div>
+  </div>
+
+  <script src="assets/playground.js?v=1.3" type="module"></script>
+</body>
+</html>

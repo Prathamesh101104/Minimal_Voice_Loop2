@@ -1,0 +1,3130 @@
+{
+  "company": {
+    "name": "Nimbus",
+    "legalName": "Nimbus Software, Inc.",
+    "tagline": "Your entire business in the cloud.",
+    "founded": "2014",
+    "hq": "Austin, TX",
+    "about": "Nimbus provides a unified suite of cloud applications designed to run your entire business from a single platform. We help organizations of all sizes streamline their operations, from sales and marketing to finance and HR. Our integrated ecosystem eliminates data silos and empowers teams to collaborate seamlessly.",
+    "mission": "To empower businesses worldwide with accessible, integrated, and secure cloud software.",
+    "stats": {
+      "Customers": "50,000+ businesses",
+      "Countries": "120+",
+      "Employees": "1,800",
+      "Uptime": "99.99%"
+    },
+    "contact": {
+      "sales": "sales@nimbus.example",
+      "support": "support@nimbus.example",
+      "phone": "+1 (800) 555-0142"
+    }
+  },
+  "policies": {
+    "refund": "We offer a comprehensive 30-day money-back guarantee for all new subscriptions. If you are not satisfied with your Nimbus product, you can request a full refund within the first 30 days of your initial purchase. This applies to both monthly and annual plans across our entire software suite. To initiate a refund, please submit a ticket to our billing team through your administrator console.",
+    "freeTrial": "All Nimbus products come with a 14-day free trial that includes full access to premium features. No credit card is required to start your trial, ensuring a risk-free evaluation period. At the end of the trial, you can seamlessly upgrade to a paid plan without losing any of your setup data.",
+    "billing": "We offer both monthly and annual billing cycles, with annual plans receiving a 20 percent discount. We accept all major credit cards, PayPal, and wire transfers for enterprise accounts exceeding $5,000 USD. All transactions are processed in USD, though local currency display options are available in the billing dashboard.",
+    "cancellation": "Administrators can cancel their subscription or downgrade their plan at any time directly from the billing portal. Upon cancellation, your account will remain active until the end of your current billing cycle. We retain your data for 60 days post-cancellation to allow for easy reactivation or data export before permanent deletion.",
+    "sla": "We guarantee a 99.9 percent monthly uptime for all standard plans and 99.99 percent for enterprise tiers. If we fail to meet this SLA, affected customers are eligible for service credits applied to their next billing cycle. Credits range from 10 percent to 50 percent of the monthly fee depending on the severity of the outage.",
+    "security": "Nimbus is fully compliant with SOC 2 Type II, ISO 27001, and global privacy frameworks including GDPR and CCPA. All customer data is encrypted in transit using TLS 1.3 and at rest using AES-256 encryption standards. We also conduct regular third-party penetration testing to ensure our infrastructure remains secure against emerging threats.",
+    "dataResidency": "Customers can choose to host their data in our secure regional data centers located in the US, EU, IN, or AU. Data residency selections are made during account creation and ensure compliance with local data localization regulations.",
+    "support": "Standard plans include email and live chat support during regular business hours. Enterprise customers receive priority phone support and a dedicated technical account manager. All users have unlimited access to the Nimbus Knowledge base and community forums."
+  },
+  "categories": [
+    {
+      "id": "sales-crm",
+      "name": "Sales & CRM"
+    },
+    {
+      "id": "marketing",
+      "name": "Marketing"
+    },
+    {
+      "id": "finance",
+      "name": "Finance & Accounting"
+    },
+    {
+      "id": "hr-people",
+      "name": "HR & People"
+    },
+    {
+      "id": "support",
+      "name": "Customer Support"
+    },
+    {
+      "id": "projects",
+      "name": "Projects & Collaboration"
+    },
+    {
+      "id": "analytics",
+      "name": "Analytics & BI"
+    },
+    {
+      "id": "it-security",
+      "name": "IT & Security"
+    }
+  ],
+  "products": [
+    {
+      "id": "nimbus-crm",
+      "name": "Nimbus CRM",
+      "category": "Sales & CRM",
+      "tagline": "Build relationships and close deals faster.",
+      "summary": "Nimbus CRM is the foundational hub for your sales team, offering comprehensive contact management and sales pipeline visibility. Track every interaction and forecast revenue with precision.",
+      "description": "Nimbus CRM centralizes your customer data so your sales team can focus on building relationships instead of hunting for information. It provides a unified view of every prospect and customer, tracking emails, calls, and meetings in a single timeline. Your team can easily manage multiple sales pipelines, customize deal stages, and automate routine tasks to keep opportunities moving forward.\n\nWith powerful forecasting tools and visual dashboards, sales leaders gain instant insights into team performance and future revenue. The platform scales effortlessly as your business grows, ensuring that everyone from frontline reps to executives has the exact data they need to drive sustainable growth.",
+      "keyFeatures": [
+        "Contact and account management",
+        "Multiple customizable sales pipelines",
+        "Revenue forecasting and goal tracking",
+        "Unified activity timeline",
+        "Sales task automation",
+        "Custom fields and tagging",
+        "Role-based access permissions",
+        "Advanced reporting and dashboards",
+        "Data import and deduplication"
+      ],
+      "specs": {
+        "Deployment": "Cloud (multi-region)",
+        "API": "REST + Webhooks + SDKs",
+        "Data residency": "US, EU, IN, AU",
+        "Uptime SLA": "99.9%",
+        "Integrations": "200+",
+        "Mobile apps": "iOS, Android",
+        "Support": "24/5 chat & email",
+        "Storage": "50GB per user"
+      },
+      "integrations": [
+        "Nimbus Leads",
+        "Nimbus Campaigns",
+        "Nimbus Analytics",
+        "Google Workspace",
+        "Microsoft 365",
+        "Slack"
+      ],
+      "tiers": [
+        {
+          "name": "Free",
+          "priceMonthly": 0,
+          "priceAnnualMonthly": 0,
+          "unit": "per user / month",
+          "highlights": [
+            "Basic contact management",
+            "1 sales pipeline",
+            "Standard support"
+          ],
+          "limits": {
+            "Contacts": "1,000",
+            "Users": "Up to 3"
+          }
+        },
+        {
+          "name": "Starter",
+          "priceMonthly": 15,
+          "priceAnnualMonthly": 12,
+          "unit": "per user / month",
+          "highlights": [
+            "Up to 5 pipelines",
+            "Custom fields",
+            "Advanced filters"
+          ],
+          "limits": {
+            "Contacts": "10,000"
+          }
+        },
+        {
+          "name": "Professional",
+          "priceMonthly": 45,
+          "priceAnnualMonthly": 36,
+          "unit": "per user / month",
+          "highlights": [
+            "Unlimited pipelines",
+            "Revenue forecasting",
+            "Workflow automation",
+            "Custom reporting"
+          ],
+          "limits": {
+            "Contacts": "100,000"
+          }
+        },
+        {
+          "name": "Enterprise",
+          "priceMonthly": null,
+          "priceAnnualMonthly": null,
+          "custom": true,
+          "unit": "custom",
+          "highlights": [
+            "Nimbus SSO included",
+            "Advanced security controls",
+            "Dedicated support manager",
+            "Custom onboarding"
+          ],
+          "limits": {
+            "Users": "Unlimited"
+          }
+        }
+      ],
+      "addOns": [
+        {
+          "name": "Extra Storage",
+          "price": "$10 / 100GB / month",
+          "desc": "Add additional file storage for customer documents and attachments."
+        }
+      ],
+      "faqs": [
+        {
+          "q": "What does Nimbus CRM cost?",
+          "a": "Nimbus CRM starts with a Free tier for small teams, while paid plans range from $15 per user monthly for Starter to $45 per user monthly for Professional. Enterprise pricing is custom."
+        },
+        {
+          "q": "Is there a free trial?",
+          "a": "Yes, we offer a 14-day free trial on all paid plans with no credit card required."
+        },
+        {
+          "q": "What is the refund policy for Nimbus CRM?",
+          "a": "We provide a 30-day money-back guarantee for all new subscriptions if you are not completely satisfied."
+        },
+        {
+          "q": "Can I import my existing contacts?",
+          "a": "Absolutely, you can easily import contacts from CSV files or directly from other popular CRM platforms using our migration wizard."
+        }
+      ],
+      "categoryId": "sales-crm"
+    },
+    {
+      "id": "nimbus-leads",
+      "name": "Nimbus Leads",
+      "category": "Sales & CRM",
+      "tagline": "Automate outreach and engage your best prospects.",
+      "summary": "Nimbus Leads empowers your sales development reps with automated outreach sequences, a built-in dialer, and intelligent lead scoring. Connect with the right prospects at the perfect time.",
+      "description": "Nimbus Leads transforms how your team handles outbound sales by automating repetitive outreach tasks. You can create multi-channel sequences that combine emails, phone calls, and social touches into a seamless workflow. The built-in power dialer allows reps to call through lists rapidly while automatically logging call notes and outcomes directly into your database.\n\nTo ensure your team focuses on the highest value targets, the platform includes predictive lead scoring based on engagement metrics and demographic data. Real-time analytics help managers coach their teams effectively, optimize messaging, and maximize connection rates across all communication channels.",
+      "keyFeatures": [
+        "Multi-channel outreach sequences",
+        "Built-in power dialer",
+        "Predictive lead scoring",
+        "Email tracking and templates",
+        "Call recording and transcription",
+        "Local presence dialing",
+        "A/B testing for messaging",
+        "Daily task queues",
+        "Engagement analytics"
+      ],
+      "specs": {
+        "Deployment": "Cloud (multi-region)",
+        "API": "REST + Webhooks + GraphQL",
+        "Data residency": "US, EU, IN, AU",
+        "Uptime SLA": "99.95%",
+        "Integrations": "150+",
+        "Mobile apps": "iOS, Android",
+        "Support": "24/5 chat & email",
+        "Telephony": "VoIP via Twilio backbone"
+      },
+      "integrations": [
+        "Nimbus CRM",
+        "Nimbus Social",
+        "LinkedIn Sales Navigator",
+        "Google Workspace",
+        "Zapier"
+      ],
+      "tiers": [
+        {
+          "name": "Free",
+          "priceMonthly": 0,
+          "priceAnnualMonthly": 0,
+          "unit": "per user / month",
+          "highlights": [
+            "Basic email tracking",
+            "Manual task queues",
+            "Standard support"
+          ],
+          "limits": {
+            "Emails": "100 per day",
+            "Users": "Up to 3"
+          }
+        },
+        {
+          "name": "Starter",
+          "priceMonthly": 25,
+          "priceAnnualMonthly": 20,
+          "unit": "per user / month",
+          "highlights": [
+            "Basic outreach sequences",
+            "Standard dialer",
+            "Email templates"
+          ],
+          "limits": {
+            "Active Sequences": "5 per user"
+          }
+        },
+        {
+          "name": "Professional",
+          "priceMonthly": 65,
+          "priceAnnualMonthly": 52,
+          "unit": "per user / month",
+          "highlights": [
+            "Unlimited sequences",
+            "Power dialer with local presence",
+            "Predictive lead scoring",
+            "Call recording"
+          ],
+          "limits": {
+            "Call Minutes": "2,000 per user"
+          }
+        },
+        {
+          "name": "Enterprise",
+          "priceMonthly": null,
+          "priceAnnualMonthly": null,
+          "custom": true,
+          "unit": "custom",
+          "highlights": [
+            "Nimbus SSO integration",
+            "Advanced security & compliance",
+            "Dedicated support and coaching",
+            "Custom AI scoring models"
+          ],
+          "limits": {
+            "Users": "Unlimited"
+          }
+        }
+      ],
+      "addOns": [
+        {
+          "name": "Additional Call Minutes",
+          "price": "$15 / 1000 minutes",
+          "desc": "Purchase extra VoIP calling minutes for high-volume outbound teams."
+        }
+      ],
+      "faqs": [
+        {
+          "q": "What does Nimbus Leads cost?",
+          "a": "Nimbus Leads has a Free tier, a Starter plan at $25 per user monthly, a Professional plan at $65 per user monthly, and custom Enterprise pricing."
+        },
+        {
+          "q": "Is there a free trial?",
+          "a": "Yes, you can try Nimbus Leads free for 14 days with full access to Professional features."
+        },
+        {
+          "q": "What is the refund policy for Nimbus Leads?",
+          "a": "We offer a 30-day money-back guarantee on all initial subscriptions."
+        },
+        {
+          "q": "Does the dialer support international calling?",
+          "a": "Yes, our built-in dialer supports calling to over 100 countries, with rates varying by destination region."
+        }
+      ],
+      "categoryId": "sales-crm"
+    },
+    {
+      "id": "nimbus-quote",
+      "name": "Nimbus Quote",
+      "category": "Sales & CRM",
+      "tagline": "Create proposals and close deals with ease.",
+      "summary": "Nimbus Quote is a complete CPQ and proposal solution that accelerates your sales cycle. Generate accurate quotes, collaborate in deal rooms, and capture secure e-signatures.",
+      "description": "Nimbus Quote streamlines the final stages of your sales process by eliminating manual errors and slow approval cycles. Sales reps can quickly configure complex products, apply approved discounts, and generate beautiful, branded proposals in minutes. The platform ensures pricing accuracy while giving leadership full control over discount workflows and margin requirements.\n\nBeyond basic quoting, the software provides interactive deal rooms where buyers and sellers can collaborate, review documents, and negotiate terms in real time. Once an agreement is reached, legally binding e-signatures allow customers to sign off instantly from any device, drastically reducing the time it takes to close business.",
+      "keyFeatures": [
+        "Product configuration rules",
+        "Dynamic pricing and discounting",
+        "Branded proposal generation",
+        "Interactive deal rooms",
+        "Legally binding e-signatures",
+        "Approval workflows",
+        "Document tracking and analytics",
+        "Subscription billing support",
+        "Multi-currency support"
+      ],
+      "specs": {
+        "Deployment": "Cloud (multi-region)",
+        "API": "REST + Webhooks",
+        "Data residency": "US, EU, AU",
+        "Uptime SLA": "99.9%",
+        "Integrations": "100+",
+        "Mobile apps": "iOS, Android (view only)",
+        "Support": "24/5 chat & email",
+        "Compliance": "ESIGN and UETA compliant"
+      },
+      "integrations": [
+        "Nimbus CRM",
+        "Nimbus Invoice",
+        "Nimbus Docs",
+        "Stripe",
+        "DocuSign",
+        "Microsoft 365"
+      ],
+      "tiers": [
+        {
+          "name": "Free",
+          "priceMonthly": 0,
+          "priceAnnualMonthly": 0,
+          "unit": "per user / month",
+          "highlights": [
+            "Basic quotes",
+            "Standard templates",
+            "Manual approvals"
+          ],
+          "limits": {
+            "Quotes": "10 per month",
+            "Users": "Up to 3"
+          }
+        },
+        {
+          "name": "Starter",
+          "priceMonthly": 20,
+          "priceAnnualMonthly": 16,
+          "unit": "per user / month",
+          "highlights": [
+            "Unlimited quotes",
+            "Custom branding",
+            "Basic e-signatures"
+          ],
+          "limits": {
+            "Deal Rooms": "5 active"
+          }
+        },
+        {
+          "name": "Professional",
+          "priceMonthly": 50,
+          "priceAnnualMonthly": 40,
+          "unit": "per user / month",
+          "highlights": [
+            "Advanced CPQ rules",
+            "Interactive deal rooms",
+            "Automated approval workflows",
+            "Document analytics"
+          ],
+          "limits": {
+            "Templates": "Unlimited"
+          }
+        },
+        {
+          "name": "Enterprise",
+          "priceMonthly": null,
+          "priceAnnualMonthly": null,
+          "custom": true,
+          "unit": "custom",
+          "highlights": [
+            "Nimbus SSO included",
+            "Advanced security policies",
+            "Dedicated support team",
+            "Custom contract redlining"
+          ],
+          "limits": {
+            "Users": "Unlimited"
+          }
+        }
+      ],
+      "addOns": [
+        {
+          "name": "Premium E-Signatures",
+          "price": "$20 / user / month",
+          "desc": "Advanced identity verification and compliance tracking for highly regulated industries."
+        }
+      ],
+      "faqs": [
+        {
+          "q": "What does Nimbus Quote cost?",
+          "a": "Nimbus Quote offers a Free tier, Starter at $20 per user monthly, Professional at $50 per user monthly, and custom pricing for Enterprise."
+        },
+        {
+          "q": "Is there a free trial?",
+          "a": "Yes, you can start a 14-day free trial to test out deal rooms and e-signatures."
+        },
+        {
+          "q": "What is the refund policy for Nimbus Quote?",
+          "a": "All new accounts are covered by our 30-day money-back guarantee."
+        },
+        {
+          "q": "Are the e-signatures legally binding?",
+          "a": "Yes, our e-signatures comply with major international laws including ESIGN, UETA, and eIDAS."
+        }
+      ],
+      "categoryId": "sales-crm"
+    },
+    {
+      "id": "nimbus-campaigns",
+      "name": "Nimbus Campaigns",
+      "category": "Marketing",
+      "tagline": "Automate emails and drive customer journeys effortlessly.",
+      "summary": "Nimbus Campaigns is a powerful email marketing and automation platform designed to help you engage leads and close deals. Build personalized journeys that deliver the right message at exactly the right time.",
+      "description": "Nimbus Campaigns empowers marketing teams to create beautiful, responsive emails without writing a single line of code. Our intuitive drag-and-drop editor and extensive template library make it easy to craft professional campaigns in minutes. You can segment your audience based on behavior, demographics, and engagement metrics to ensure maximum relevance for every message sent.\nBeyond simple broadcasts, the platform offers advanced marketing automation capabilities. You can build complex, multi-step customer journeys using a visual workflow builder. Set up triggers based on email opens, link clicks, or actions taken on your website to automatically nurture prospects down the funnel. With built-in A/B testing and comprehensive analytics, you can continuously optimize your strategy for better conversion rates.",
+      "keyFeatures": [
+        "Drag-and-drop email builder with responsive templates",
+        "Visual automation journey builder with conditional logic",
+        "Advanced list segmentation and dynamic content",
+        "A/B testing for subject lines and email content",
+        "Real-time analytics and engagement tracking",
+        "Automated drip campaigns and autoresponders",
+        "Spam testing and deliverability optimization tools",
+        "Custom subscription management centers",
+        "Behavioral triggers based on user actions"
+      ],
+      "specs": {
+        "Deployment": "Cloud (multi-region)",
+        "API": "REST + Webhooks + SDKs",
+        "Data residency": "US, EU, IN, AU",
+        "Uptime SLA": "99.9%",
+        "Integrations": "200+",
+        "Mobile apps": "iOS, Android",
+        "Support": "24/5 chat & email",
+        "Email delivery rate": "99.5% average"
+      },
+      "integrations": [
+        "Nimbus CRM",
+        "Nimbus Leads",
+        "Nimbus Analytics",
+        "Zapier",
+        "Slack",
+        "Microsoft 365"
+      ],
+      "tiers": [
+        {
+          "name": "Free",
+          "priceMonthly": 0,
+          "priceAnnualMonthly": 0,
+          "unit": "per user / month",
+          "highlights": [
+            "Drag-and-drop email builder",
+            "Basic list management",
+            "Standard reporting"
+          ],
+          "limits": {
+            "Contacts": "500",
+            "Emails per month": "1,000"
+          }
+        },
+        {
+          "name": "Starter",
+          "priceMonthly": 15,
+          "priceAnnualMonthly": 12,
+          "unit": "per user / month",
+          "highlights": [
+            "Visual automation builder",
+            "A/B testing tools",
+            "Advanced segmentation"
+          ],
+          "limits": {
+            "Contacts": "5,000",
+            "Emails per month": "25,000"
+          }
+        },
+        {
+          "name": "Professional",
+          "priceMonthly": 45,
+          "priceAnnualMonthly": 36,
+          "unit": "per user / month",
+          "highlights": [
+            "Dynamic content blocks",
+            "Behavioral triggers",
+            "Priority email delivery",
+            "Custom branding"
+          ],
+          "limits": {
+            "Contacts": "25,000",
+            "Emails per month": "100,000"
+          }
+        },
+        {
+          "name": "Enterprise",
+          "priceMonthly": null,
+          "priceAnnualMonthly": null,
+          "custom": true,
+          "unit": "custom",
+          "highlights": [
+            "Dedicated IP address",
+            "Custom onboarding",
+            "Advanced security",
+            "Dedicated support",
+            "SSO integration"
+          ],
+          "limits": {
+            "Users": "Unlimited"
+          }
+        }
+      ],
+      "addOns": [
+        {
+          "name": "Dedicated IP",
+          "price": "$29 / month",
+          "desc": "Improve your sender reputation with a dedicated IP address for your campaigns."
+        }
+      ],
+      "faqs": [
+        {
+          "q": "What does Nimbus Campaigns cost?",
+          "a": "We offer a Free tier for basic needs, a Starter plan at $15 per user per month, a Professional plan at $45 per user per month, and custom Enterprise pricing."
+        },
+        {
+          "q": "Is there a free trial?",
+          "a": "Yes, we offer a 14-day free trial on our Starter and Professional plans with no credit card required."
+        },
+        {
+          "q": "What is the refund policy for Nimbus Campaigns?",
+          "a": "We stand by our product with a 30-day money-back guarantee for all new paid subscriptions."
+        },
+        {
+          "q": "Can I import my existing contact lists?",
+          "a": "Absolutely, you can easily import contacts via CSV or sync them directly from Nimbus CRM and other supported integrations."
+        }
+      ],
+      "categoryId": "marketing"
+    },
+    {
+      "id": "nimbus-social",
+      "name": "Nimbus Social",
+      "category": "Marketing",
+      "tagline": "Manage, monitor, and measure your social presence.",
+      "summary": "Nimbus Social is an all-in-one social media management tool that lets you schedule posts, listen to brand conversations, and analyze performance across networks. Streamline your social strategy from a single intuitive dashboard.",
+      "description": "Nimbus Social simplifies the way businesses handle their social media presence across multiple platforms. With our unified content calendar, your team can draft, review, and schedule posts weeks in advance. Collaborative approval workflows ensure that every piece of content meets your brand guidelines before it goes live, saving time and preventing costly mistakes.\nThe platform also features powerful social listening and analytics tools. Track brand mentions, monitor industry keywords, and gauge customer sentiment in real time. Our comprehensive reporting dashboards break down follower growth, engagement rates, and click-through metrics, helping you understand exactly what content resonates with your audience and how to improve your overall social strategy.",
+      "keyFeatures": [
+        "Unified social media publishing calendar",
+        "Bulk scheduling and automated queue management",
+        "Multi-network support including LinkedIn, Twitter, and Facebook",
+        "Social listening and brand mention monitoring",
+        "Sentiment analysis for customer feedback",
+        "Collaborative drafting and approval workflows",
+        "Unified social inbox for responding to messages",
+        "Customizable analytics and performance reports",
+        "Competitor tracking and benchmarking"
+      ],
+      "specs": {
+        "Deployment": "Cloud (multi-region)",
+        "API": "REST + Webhooks + SDKs",
+        "Data residency": "US, EU, IN, AU",
+        "Uptime SLA": "99.9%",
+        "Integrations": "150+",
+        "Mobile apps": "iOS, Android",
+        "Support": "24/5 chat & email",
+        "Supported networks": "7 major platforms"
+      },
+      "integrations": [
+        "Nimbus Campaigns",
+        "Nimbus Analytics",
+        "Nimbus Desk",
+        "Google Workspace",
+        "Zapier",
+        "Canva"
+      ],
+      "tiers": [
+        {
+          "name": "Free",
+          "priceMonthly": 0,
+          "priceAnnualMonthly": 0,
+          "unit": "per user / month",
+          "highlights": [
+            "Basic post scheduling",
+            "Unified inbox",
+            "Standard analytics"
+          ],
+          "limits": {
+            "Social profiles": "3",
+            "Scheduled posts": "50"
+          }
+        },
+        {
+          "name": "Starter",
+          "priceMonthly": 20,
+          "priceAnnualMonthly": 16,
+          "unit": "per user / month",
+          "highlights": [
+            "Advanced calendar views",
+            "Bulk scheduling",
+            "Keyword listening"
+          ],
+          "limits": {
+            "Social profiles": "10",
+            "Scheduled posts": "500"
+          }
+        },
+        {
+          "name": "Professional",
+          "priceMonthly": 50,
+          "priceAnnualMonthly": 40,
+          "unit": "per user / month",
+          "highlights": [
+            "Approval workflows",
+            "Sentiment analysis",
+            "Custom report builder",
+            "Competitor tracking"
+          ],
+          "limits": {
+            "Social profiles": "25",
+            "Scheduled posts": "Unlimited"
+          }
+        },
+        {
+          "name": "Enterprise",
+          "priceMonthly": null,
+          "priceAnnualMonthly": null,
+          "custom": true,
+          "unit": "custom",
+          "highlights": [
+            "Unlimited social profiles",
+            "Custom reporting",
+            "Advanced security",
+            "Dedicated support",
+            "SSO integration"
+          ],
+          "limits": {
+            "Users": "Unlimited"
+          }
+        }
+      ],
+      "addOns": [
+        {
+          "name": "Extra Social Profiles",
+          "price": "$10 / month per 5 profiles",
+          "desc": "Add more social media accounts to your workspace as your brand grows."
+        }
+      ],
+      "faqs": [
+        {
+          "q": "What does Nimbus Social cost?",
+          "a": "Nimbus Social includes a Free tier, a Starter plan for $20 per user per month, a Professional plan for $50 per user per month, and custom Enterprise packages."
+        },
+        {
+          "q": "Is there a free trial?",
+          "a": "Yes, you can try the Professional tier features free for 14 days without entering a credit card."
+        },
+        {
+          "q": "What is the refund policy for Nimbus Social?",
+          "a": "We offer a 30-day money-back guarantee if you are not completely satisfied with your subscription."
+        },
+        {
+          "q": "Which social networks do you support?",
+          "a": "We currently support scheduling and monitoring for Facebook, Twitter, Instagram, LinkedIn, Pinterest, TikTok, and YouTube."
+        }
+      ],
+      "categoryId": "marketing"
+    },
+    {
+      "id": "nimbus-sites",
+      "name": "Nimbus Sites",
+      "category": "Marketing",
+      "tagline": "Build high-converting landing pages and websites instantly.",
+      "summary": "Nimbus Sites is a visual website and landing page builder designed to help marketers capture more leads. Create beautiful, mobile-optimized pages with integrated forms and native A/B testing.",
+      "description": "Nimbus Sites gives marketing professionals the power to launch stunning web pages without needing a developer. The platform features a robust drag-and-drop interface and a vast library of conversion-optimized templates tailored for various industries. Whether you are launching a product, hosting a webinar, or capturing newsletter signups, you can design and publish your page in record time.\nTo help you maximize your marketing ROI, Nimbus Sites includes powerful conversion rate optimization tools. You can easily set up A/B tests to compare different headlines, images, or calls to action to see what drives the most conversions. Built-in lead capture forms automatically sync with your CRM and marketing tools, ensuring that no prospect falls through the cracks.",
+      "keyFeatures": [
+        "Drag-and-drop visual page builder",
+        "Library of conversion-optimized templates",
+        "Native A/B and multivariate testing",
+        "Dynamic text replacement for personalized experiences",
+        "Built-in lead capture forms and pop-ups",
+        "Custom domain mapping and SSL certificates",
+        "Mobile-responsive design controls",
+        "Global blocks for headers and footers",
+        "Real-time conversion analytics and heatmaps"
+      ],
+      "specs": {
+        "Deployment": "Cloud (multi-region)",
+        "API": "REST + Webhooks + SDKs",
+        "Data residency": "US, EU, IN, AU",
+        "Uptime SLA": "99.99%",
+        "Integrations": "200+",
+        "Mobile apps": "iOS, Android",
+        "Support": "24/5 chat & email",
+        "Global CDN": "Included"
+      },
+      "integrations": [
+        "Nimbus Leads",
+        "Nimbus CRM",
+        "Nimbus Analytics",
+        "Google Workspace",
+        "Zapier",
+        "Stripe"
+      ],
+      "tiers": [
+        {
+          "name": "Free",
+          "priceMonthly": 0,
+          "priceAnnualMonthly": 0,
+          "unit": "per user / month",
+          "highlights": [
+            "Visual page builder",
+            "Basic templates",
+            "Standard web forms"
+          ],
+          "limits": {
+            "Published pages": "5",
+            "Monthly visitors": "1,000"
+          }
+        },
+        {
+          "name": "Starter",
+          "priceMonthly": 25,
+          "priceAnnualMonthly": 20,
+          "unit": "per user / month",
+          "highlights": [
+            "Custom domains",
+            "A/B testing tools",
+            "Premium templates"
+          ],
+          "limits": {
+            "Published pages": "25",
+            "Monthly visitors": "10,000"
+          }
+        },
+        {
+          "name": "Professional",
+          "priceMonthly": 60,
+          "priceAnnualMonthly": 48,
+          "unit": "per user / month",
+          "highlights": [
+            "Dynamic text replacement",
+            "Heatmap analytics",
+            "Advanced pop-ups",
+            "Global design blocks"
+          ],
+          "limits": {
+            "Published pages": "Unlimited",
+            "Monthly visitors": "100,000"
+          }
+        },
+        {
+          "name": "Enterprise",
+          "priceMonthly": null,
+          "priceAnnualMonthly": null,
+          "custom": true,
+          "unit": "custom",
+          "highlights": [
+            "Unlimited visitors",
+            "Custom template design",
+            "Advanced security",
+            "Dedicated support",
+            "SSO integration"
+          ],
+          "limits": {
+            "Users": "Unlimited"
+          }
+        }
+      ],
+      "addOns": [
+        {
+          "name": "Additional Visitor Capacity",
+          "price": "$15 / month per 50k visitors",
+          "desc": "Scale your bandwidth seamlessly during high-traffic marketing campaigns."
+        }
+      ],
+      "faqs": [
+        {
+          "q": "What does Nimbus Sites cost?",
+          "a": "Pricing starts with a Free tier, moves to $25 per user per month for Starter, $60 for Professional, and custom pricing for Enterprise."
+        },
+        {
+          "q": "Is there a free trial?",
+          "a": "Yes, we provide a 14-day free trial on all premium plans so you can test the builder before buying."
+        },
+        {
+          "q": "What is the refund policy for Nimbus Sites?",
+          "a": "All paid plans are backed by our standard 30-day money-back guarantee."
+        },
+        {
+          "q": "Can I use my own custom domain?",
+          "a": "Yes, custom domain mapping with free SSL certificates is included on all paid plans."
+        }
+      ],
+      "categoryId": "marketing"
+    },
+    {
+      "id": "nimbus-books",
+      "name": "Nimbus Books",
+      "category": "Finance & Accounting",
+      "tagline": "Smart double entry accounting for growing businesses",
+      "summary": "Nimbus Books simplifies your financial management with automated workflows and real-time insights. Stay compliant and ready for tax season with our intuitive double-entry accounting software.",
+      "description": "Nimbus Books provides a comprehensive suite of accounting tools designed to give you complete visibility into your business finances. From managing charts of accounts to reconciling bank statements, our platform automates the tedious aspects of bookkeeping so you can focus on growth. Powerful reporting features ensure you always know your cash flow status.\n\nBuilt for modern teams, Nimbus Books allows seamless collaboration between business owners and their accountants. Role-based access controls keep your financial data secure while providing the right level of visibility to stakeholders. With automated tax calculations and multi-currency support, scaling your operations globally has never been easier.",
+      "keyFeatures": [
+        "Automated bank reconciliation",
+        "Customizable chart of accounts",
+        "General ledger management",
+        "Accounts payable and receivable",
+        "Multi-currency support",
+        "Automated tax calculations",
+        "Real-time cash flow dashboards",
+        "Accountant access portal",
+        "Custom financial reporting"
+      ],
+      "specs": {
+        "Deployment": "Cloud (multi-region)",
+        "API": "REST + Webhooks + SDKs",
+        "Data residency": "US, EU, IN, AU",
+        "Uptime SLA": "99.9%",
+        "Integrations": "200+",
+        "Mobile apps": "iOS, Android",
+        "Support": "24/5 chat & email",
+        "Compliance": "SOC 2 Type II, GDPR"
+      },
+      "integrations": [
+        "Nimbus Invoice",
+        "Nimbus Payroll",
+        "Nimbus Analytics",
+        "Stripe",
+        "Google Workspace",
+        "Zapier"
+      ],
+      "tiers": [
+        {
+          "name": "Free",
+          "priceMonthly": 0,
+          "priceAnnualMonthly": 0,
+          "unit": "per user / month",
+          "highlights": [
+            "Basic ledger tracking",
+            "Manual bank imports",
+            "Standard reporting"
+          ],
+          "limits": {
+            "Transactions": "50 per month",
+            "Users": "1"
+          }
+        },
+        {
+          "name": "Starter",
+          "priceMonthly": 15,
+          "priceAnnualMonthly": 12,
+          "unit": "per user / month",
+          "highlights": [
+            "Automated bank feeds",
+            "Basic multi-currency",
+            "Accountant access"
+          ],
+          "limits": {
+            "Transactions": "500 per month",
+            "Users": "3"
+          }
+        },
+        {
+          "name": "Professional",
+          "priceMonthly": 40,
+          "priceAnnualMonthly": 32,
+          "unit": "per user / month",
+          "highlights": [
+            "Advanced custom reporting",
+            "Automated tax filing prep",
+            "Departmental budgeting",
+            "Priority support"
+          ],
+          "limits": {
+            "Transactions": "Unlimited",
+            "Users": "10"
+          }
+        },
+        {
+          "name": "Enterprise",
+          "priceMonthly": null,
+          "priceAnnualMonthly": null,
+          "custom": true,
+          "unit": "custom",
+          "highlights": [
+            "Consolidated multi-entity accounting",
+            "Custom API limits",
+            "Advanced security and SSO",
+            "Dedicated account manager"
+          ],
+          "limits": {
+            "Users": "Unlimited"
+          }
+        }
+      ],
+      "addOns": [
+        {
+          "name": "Dedicated Bookkeeper",
+          "price": "$199 / month",
+          "desc": "Monthly reconciliation and review by a certified Nimbus partner."
+        }
+      ],
+      "faqs": [
+        {
+          "q": "What does Nimbus Books cost?",
+          "a": "Nimbus Books starts with a Free tier for basic needs, while our Starter plan is $15 per user per month. Professional is $40 per user per month, and Enterprise pricing is customized to your needs."
+        },
+        {
+          "q": "Is there a free trial?",
+          "a": "Yes, all paid plans come with a 14-day free trial so you can explore the advanced features before committing."
+        },
+        {
+          "q": "What is the refund policy for Nimbus Books?",
+          "a": "We offer a 30-day money-back guarantee. If you are not satisfied within your first 30 days of a paid subscription, we will issue a full refund."
+        },
+        {
+          "q": "Can I invite my external accountant to Nimbus Books?",
+          "a": "Yes, all paid plans include a dedicated accountant role that allows your CPA to access your books without consuming a paid user seat."
+        }
+      ],
+      "categoryId": "finance"
+    },
+    {
+      "id": "nimbus-invoice",
+      "name": "Nimbus Invoice",
+      "category": "Finance & Accounting",
+      "tagline": "Effortless invoicing and fast online payment collection",
+      "summary": "Create professional invoices, set up recurring billing, and accept online payments in minutes. Nimbus Invoice helps you get paid faster and improves your cash flow.",
+      "description": "Nimbus Invoice takes the friction out of billing your clients. You can easily design custom invoices that reflect your brand, send them via email or SMS, and track when they are opened. By integrating directly with major payment gateways, your clients can pay you instantly using credit cards, bank transfers, or digital wallets.\n\nManaging recurring revenue is simple with our automated subscription billing engine. You can set up flexible billing schedules, handle proration, and send automated payment reminders for overdue accounts. The centralized dashboard gives you a clear view of outstanding balances and revenue trends, ensuring nothing slips through the cracks.",
+      "keyFeatures": [
+        "Customizable invoice templates",
+        "Recurring subscription billing",
+        "Automated payment reminders",
+        "Multi-currency invoicing",
+        "Client self-service portal",
+        "Estimate and quote conversion",
+        "Late fee automation",
+        "Time and materials billing",
+        "Read receipt tracking"
+      ],
+      "specs": {
+        "Deployment": "Cloud (multi-region)",
+        "API": "REST + Webhooks + SDKs",
+        "Data residency": "US, EU, IN, AU",
+        "Uptime SLA": "99.9%",
+        "Integrations": "200+",
+        "Mobile apps": "iOS, Android",
+        "Support": "24/5 chat & email",
+        "Supported Gateways": "Stripe, PayPal, Square, Authorize.Net"
+      },
+      "integrations": [
+        "Nimbus Books",
+        "Nimbus Quote",
+        "Nimbus CRM",
+        "PayPal",
+        "Microsoft 365",
+        "Slack"
+      ],
+      "tiers": [
+        {
+          "name": "Free",
+          "priceMonthly": 0,
+          "priceAnnualMonthly": 0,
+          "unit": "per user / month",
+          "highlights": [
+            "Standard invoice templates",
+            "Online payment links",
+            "Basic client management"
+          ],
+          "limits": {
+            "Invoices": "10 per month",
+            "Clients": "5"
+          }
+        },
+        {
+          "name": "Starter",
+          "priceMonthly": 10,
+          "priceAnnualMonthly": 8,
+          "unit": "per user / month",
+          "highlights": [
+            "Custom branding",
+            "Recurring billing",
+            "Automated reminders"
+          ],
+          "limits": {
+            "Invoices": "100 per month",
+            "Clients": "50"
+          }
+        },
+        {
+          "name": "Professional",
+          "priceMonthly": 30,
+          "priceAnnualMonthly": 24,
+          "unit": "per user / month",
+          "highlights": [
+            "Client self-service portal",
+            "Advanced analytics",
+            "Multi-currency support",
+            "Custom late fees"
+          ],
+          "limits": {
+            "Invoices": "Unlimited",
+            "Clients": "Unlimited"
+          }
+        },
+        {
+          "name": "Enterprise",
+          "priceMonthly": null,
+          "priceAnnualMonthly": null,
+          "custom": true,
+          "unit": "custom",
+          "highlights": [
+            "Multiple business entities",
+            "Advanced security and SSO",
+            "Dedicated support",
+            "Custom integration support"
+          ],
+          "limits": {
+            "Users": "Unlimited"
+          }
+        }
+      ],
+      "addOns": [
+        {
+          "name": "Advanced Custom Domain",
+          "price": "$15 / month",
+          "desc": "Host your client payment portal on your own custom web address."
+        }
+      ],
+      "faqs": [
+        {
+          "q": "What does Nimbus Invoice cost?",
+          "a": "We offer a Free tier for up to 10 invoices a month. The Starter plan is $10 per user per month, Professional is $30 per user per month, and Enterprise is custom priced."
+        },
+        {
+          "q": "Is there a free trial?",
+          "a": "Yes, you can try any premium plan free for 14 days with no credit card required."
+        },
+        {
+          "q": "What is the refund policy for Nimbus Invoice?",
+          "a": "We stand by our 30-day money-back guarantee. If you cancel within the first 30 days of your paid subscription, we will refund your payment in full."
+        },
+        {
+          "q": "Does Nimbus Invoice charge transaction fees?",
+          "a": "Nimbus does not charge any additional transaction fees, but standard processing rates from your connected payment gateway will still apply."
+        }
+      ],
+      "categoryId": "finance"
+    },
+    {
+      "id": "nimbus-expense",
+      "name": "Nimbus Expense",
+      "category": "Finance & Accounting",
+      "tagline": "Streamline corporate spending and employee reimbursement workflows",
+      "summary": "Control company spending with smart corporate cards and automated expense reporting. Nimbus Expense eliminates manual data entry and accelerates employee reimbursements.",
+      "description": "Nimbus Expense transforms how your company handles employee spending and out-of-pocket reimbursements. Employees can simply snap a picture of their receipts using our mobile app, and our optical character recognition technology instantly extracts the details to create an expense line item. Managers can approve reports on the go, speeding up the entire reimbursement cycle.\n\nTake control of your budget by issuing physical and virtual Nimbus corporate cards with built-in spending limits. You can set custom policies to automatically flag out-of-policy expenses and route high-value requests to senior management. Real-time spend analytics give finance teams the visibility they need to optimize cash flow and enforce compliance across the organization.",
+      "keyFeatures": [
+        "Automated receipt scanning",
+        "Physical and virtual corporate cards",
+        "Customizable approval workflows",
+        "Automated policy enforcement",
+        "Next-day ACH reimbursements",
+        "Mileage and per diem tracking",
+        "Vendor payment management",
+        "Real-time spend analytics",
+        "Multi-level organizational routing"
+      ],
+      "specs": {
+        "Deployment": "Cloud (multi-region)",
+        "API": "REST + Webhooks + SDKs",
+        "Data residency": "US, EU, IN, AU",
+        "Uptime SLA": "99.9%",
+        "Integrations": "200+",
+        "Mobile apps": "iOS, Android",
+        "Support": "24/5 chat & email",
+        "Card Network": "Visa and Mastercard"
+      },
+      "integrations": [
+        "Nimbus Books",
+        "Nimbus Payroll",
+        "Nimbus Projects",
+        "Google Workspace",
+        "Zapier",
+        "Uber for Business"
+      ],
+      "tiers": [
+        {
+          "name": "Free",
+          "priceMonthly": 0,
+          "priceAnnualMonthly": 0,
+          "unit": "per user / month",
+          "highlights": [
+            "Manual receipt entry",
+            "Basic expense reports",
+            "Single-step approvals"
+          ],
+          "limits": {
+            "Receipt scans": "30 per month",
+            "Virtual cards": "0"
+          }
+        },
+        {
+          "name": "Starter",
+          "priceMonthly": 15,
+          "priceAnnualMonthly": 12,
+          "unit": "per user / month",
+          "highlights": [
+            "Unlimited receipt scanning",
+            "Virtual corporate cards",
+            "Mileage tracking"
+          ],
+          "limits": {
+            "Receipt scans": "Unlimited",
+            "Virtual cards": "5 per user"
+          }
+        },
+        {
+          "name": "Professional",
+          "priceMonthly": 35,
+          "priceAnnualMonthly": 28,
+          "unit": "per user / month",
+          "highlights": [
+            "Physical corporate cards",
+            "Multi-stage approval routing",
+            "Automated policy enforcement",
+            "Next-day ACH reimbursements"
+          ],
+          "limits": {
+            "Receipt scans": "Unlimited",
+            "Virtual cards": "Unlimited"
+          }
+        },
+        {
+          "name": "Enterprise",
+          "priceMonthly": null,
+          "priceAnnualMonthly": null,
+          "custom": true,
+          "unit": "custom",
+          "highlights": [
+            "Global reimbursement support",
+            "Advanced security and SSO",
+            "Dedicated support",
+            "Custom ERP integrations"
+          ],
+          "limits": {
+            "Users": "Unlimited"
+          }
+        }
+      ],
+      "addOns": [
+        {
+          "name": "Global Reimbursements",
+          "price": "$5 / user / month",
+          "desc": "Reimburse employees in over 130 local currencies without exorbitant FX fees."
+        }
+      ],
+      "faqs": [
+        {
+          "q": "What does Nimbus Expense cost?",
+          "a": "Nimbus Expense is free for basic receipt tracking. Starter is $15 per user per month, Professional is $35 per user per month, and Enterprise is custom priced based on your organization size."
+        },
+        {
+          "q": "Is there a free trial?",
+          "a": "Absolutely, you can test drive the Starter or Professional plans free for 14 days."
+        },
+        {
+          "q": "What is the refund policy for Nimbus Expense?",
+          "a": "All our paid plans are backed by a 30-day money-back guarantee. If it is not a fit, cancel within 30 days for a complete refund."
+        },
+        {
+          "q": "Are the corporate cards credit or prepaid cards?",
+          "a": "Nimbus corporate cards are charge cards that draw directly from your connected business bank account, meaning no interest charges or credit checks are required."
+        }
+      ],
+      "categoryId": "finance"
+    },
+    {
+      "id": "nimbus-people",
+      "name": "Nimbus People",
+      "category": "HR & People",
+      "tagline": "Centralize your workforce and streamline employee management.",
+      "summary": "Nimbus People is a comprehensive HRIS that manages your entire employee lifecycle from onboarding to offboarding. Keep your organization aligned with centralized records, time off tracking, and interactive org charts.",
+      "description": "Managing employee data shouldn't be a hassle. Nimbus People gives your HR team a single source of truth for employee records, performance evaluations, and document management. Your staff can easily request time off, view company holidays, and update their personal information through an intuitive self-service portal.\n\nBeyond basic records, Nimbus People helps you build a strong company culture. Automated onboarding workflows ensure new hires feel welcome and prepared from day one. Interactive org charts and employee directories make it simple for teams to connect and collaborate across different departments and locations.",
+      "keyFeatures": [
+        "Centralized employee database",
+        "Automated onboarding and offboarding workflows",
+        "Time-off and leave management",
+        "Interactive organizational charts",
+        "Employee self-service portal",
+        "Performance review cycles",
+        "Document storage and e-signatures",
+        "Custom HR reporting and analytics",
+        "Company holiday calendars"
+      ],
+      "specs": {
+        "Deployment": "Cloud (multi-region)",
+        "API": "REST + Webhooks",
+        "Data residency": "US, EU, UK, AU",
+        "Uptime SLA": "99.9%",
+        "Integrations": "150+",
+        "Mobile apps": "iOS, Android",
+        "Support": "24/5 chat & email",
+        "Compliance": "SOC 2 Type II, GDPR"
+      },
+      "integrations": [
+        "Nimbus Payroll",
+        "Nimbus Recruit",
+        "Nimbus Docs",
+        "Slack",
+        "Google Workspace",
+        "Microsoft 365"
+      ],
+      "tiers": [
+        {
+          "name": "Free",
+          "priceMonthly": 0,
+          "priceAnnualMonthly": 0,
+          "unit": "per user / month",
+          "highlights": [
+            "Up to 10 employees",
+            "Basic employee records",
+            "Time-off requests"
+          ],
+          "limits": {
+            "Employees": "10",
+            "Storage": "5GB"
+          }
+        },
+        {
+          "name": "Starter",
+          "priceMonthly": 10,
+          "priceAnnualMonthly": 8,
+          "unit": "per user / month",
+          "highlights": [
+            "Up to 50 employees",
+            "Custom time-off policies",
+            "Org charts",
+            "Basic onboarding"
+          ],
+          "limits": {
+            "Employees": "50",
+            "Storage": "50GB"
+          }
+        },
+        {
+          "name": "Professional",
+          "priceMonthly": 30,
+          "priceAnnualMonthly": 24,
+          "unit": "per user / month",
+          "highlights": [
+            "Unlimited employees",
+            "Performance reviews",
+            "Advanced reporting",
+            "E-signatures"
+          ],
+          "limits": {
+            "Employees": "Unlimited",
+            "Storage": "500GB"
+          }
+        },
+        {
+          "name": "Enterprise",
+          "priceMonthly": null,
+          "priceAnnualMonthly": null,
+          "custom": true,
+          "unit": "custom",
+          "highlights": [
+            "Nimbus SSO integration",
+            "Advanced security and compliance",
+            "Dedicated support manager",
+            "Custom HR workflows"
+          ],
+          "limits": {
+            "Users": "Unlimited"
+          }
+        }
+      ],
+      "addOns": [
+        {
+          "name": "Advanced Analytics",
+          "price": "$5 / user / month",
+          "desc": "Gain deeper insights into employee retention, diversity metrics, and compensation trends."
+        }
+      ],
+      "faqs": [
+        {
+          "q": "What does Nimbus People cost?",
+          "a": "Nimbus People offers a Free tier for small teams, a Starter plan at $10 per user per month, and a Professional plan at $30 per user per month. Enterprise pricing is custom and available upon request."
+        },
+        {
+          "q": "Is there a free trial?",
+          "a": "Yes, all paid plans come with a 14-day free trial so you can explore the premium features before committing."
+        },
+        {
+          "q": "What is the refund policy for Nimbus People?",
+          "a": "We offer a 30-day money-back guarantee. If you are not satisfied within the first 30 days of your paid subscription, you can request a full refund."
+        },
+        {
+          "q": "Can employees update their own information?",
+          "a": "Yes, Nimbus People includes a self-service portal where employees can safely update personal details, request time off, and access tax documents."
+        }
+      ],
+      "categoryId": "hr-people"
+    },
+    {
+      "id": "nimbus-recruit",
+      "name": "Nimbus Recruit",
+      "category": "HR & People",
+      "tagline": "Attract, evaluate, and hire top talent faster.",
+      "summary": "Nimbus Recruit is a modern applicant tracking system designed to streamline your hiring process. Create custom hiring pipelines, schedule interviews, and collaborate with your team to find the perfect candidates.",
+      "description": "Finding the right talent requires a structured and efficient hiring process. Nimbus Recruit provides a central hub where recruiters and hiring managers can track applicants across multiple job postings. You can easily build custom hiring pipelines, automate email communications, and parse resumes with intelligent data extraction to save time on manual entry.\n\nCollaboration is at the heart of great hiring decisions. With built-in interview kits, scorecards, and feedback loops, your hiring team can evaluate candidates objectively and consistently. Seamless integrations with major job boards ensure your postings reach a wide audience, while detailed analytics help you identify bottlenecks in your recruitment funnel.",
+      "keyFeatures": [
+        "Customizable hiring pipelines",
+        "Automated resume parsing",
+        "One-click job board syndication",
+        "Interview scheduling and calendar sync",
+        "Structured interview kits and scorecards",
+        "Collaborative candidate evaluation",
+        "Automated email templates and triggers",
+        "Offer letter generation and e-signatures",
+        "Recruitment analytics and reporting"
+      ],
+      "specs": {
+        "Deployment": "Cloud (multi-region)",
+        "API": "REST + Webhooks + SDKs",
+        "Data residency": "US, EU, AU",
+        "Uptime SLA": "99.95%",
+        "Integrations": "200+",
+        "Mobile apps": "iOS, Android",
+        "Support": "24/5 chat & email",
+        "Job Board Syndication": "50+ platforms"
+      },
+      "integrations": [
+        "Nimbus People",
+        "Nimbus Campaigns",
+        "LinkedIn",
+        "Indeed",
+        "Google Workspace",
+        "Zapier"
+      ],
+      "tiers": [
+        {
+          "name": "Free",
+          "priceMonthly": 0,
+          "priceAnnualMonthly": 0,
+          "unit": "per user / month",
+          "highlights": [
+            "1 active job posting",
+            "Basic candidate tracking",
+            "Standard email templates"
+          ],
+          "limits": {
+            "Active Jobs": "1",
+            "Users": "3"
+          }
+        },
+        {
+          "name": "Starter",
+          "priceMonthly": 25,
+          "priceAnnualMonthly": 20,
+          "unit": "per user / month",
+          "highlights": [
+            "5 active job postings",
+            "Interview scheduling",
+            "Custom pipelines",
+            "Job board syndication"
+          ],
+          "limits": {
+            "Active Jobs": "5",
+            "Users": "10"
+          }
+        },
+        {
+          "name": "Professional",
+          "priceMonthly": 60,
+          "priceAnnualMonthly": 48,
+          "unit": "per user / month",
+          "highlights": [
+            "Unlimited job postings",
+            "Interview kits and scorecards",
+            "Automated triggers",
+            "Offer management"
+          ],
+          "limits": {
+            "Active Jobs": "Unlimited",
+            "Users": "Unlimited"
+          }
+        },
+        {
+          "name": "Enterprise",
+          "priceMonthly": null,
+          "priceAnnualMonthly": null,
+          "custom": true,
+          "unit": "custom",
+          "highlights": [
+            "Nimbus SSO support",
+            "Advanced security controls",
+            "Dedicated support team",
+            "Custom recruitment workflows"
+          ],
+          "limits": {
+            "Users": "Unlimited"
+          }
+        }
+      ],
+      "addOns": [
+        {
+          "name": "AI Sourcing Assistant",
+          "price": "$49 / month",
+          "desc": "Automatically discover and engage passive candidates matching your job descriptions."
+        }
+      ],
+      "faqs": [
+        {
+          "q": "What does Nimbus Recruit cost?",
+          "a": "We offer a Free tier for basic needs, a Starter plan at $25 per user per month, and a Professional plan at $60 per user per month. Enterprise plans are custom priced based on your organization."
+        },
+        {
+          "q": "Is there a free trial?",
+          "a": "Yes, you can try the Starter or Professional plans free for 14 days, no credit card required."
+        },
+        {
+          "q": "What is the refund policy for Nimbus Recruit?",
+          "a": "All paid plans are backed by our 30-day money-back guarantee. If you cancel within the first 30 days, we will issue a full refund."
+        },
+        {
+          "q": "Can I post to multiple job boards at once?",
+          "a": "Absolutely. Nimbus Recruit allows you to syndicate your job postings to over 50 major job boards with a single click."
+        }
+      ],
+      "categoryId": "hr-people"
+    },
+    {
+      "id": "nimbus-payroll",
+      "name": "Nimbus Payroll",
+      "category": "HR & People",
+      "tagline": "Accurate, automated payroll and tax filing simplified.",
+      "summary": "Nimbus Payroll takes the complexity out of paying your team by automating payroll runs, tax calculations, and compliance. Easily pay full-time employees and independent contractors in a few clicks.",
+      "description": "Processing payroll is critical, and accuracy is non-negotiable. Nimbus Payroll automates the entire payroll lifecycle, calculating wages, deductions, and taxes with precision. You can set payroll to run automatically on your preferred schedule, ensuring your team gets paid on time, every time, via direct deposit or printed checks.\n\nStaying compliant with local and federal tax regulations is effortless. The platform automatically files your payroll taxes and generates necessary year-end forms like W-2s and 1099s. With support for both salaried employees and hourly contractors, Nimbus Payroll adapts to the unique structure of your modern workforce.",
+      "keyFeatures": [
+        "Automated payroll runs",
+        "Direct deposit and check printing",
+        "Automatic tax calculation and filing",
+        "W-2 and 1099 form generation",
+        "Contractor and freelancer payments",
+        "Benefit deductions and garnishments",
+        "Multi-state payroll support",
+        "Detailed payroll reporting",
+        "General ledger syncing"
+      ],
+      "specs": {
+        "Deployment": "Cloud (multi-region)",
+        "API": "REST + Webhooks",
+        "Data residency": "US, EU",
+        "Uptime SLA": "99.99%",
+        "Integrations": "100+",
+        "Mobile apps": "iOS, Android",
+        "Support": "24/7 chat & phone",
+        "Tax Filing Support": "All 50 US States"
+      },
+      "integrations": [
+        "Nimbus People",
+        "Nimbus Books",
+        "Nimbus Expense",
+        "QuickBooks",
+        "Xero",
+        "Zapier"
+      ],
+      "tiers": [
+        {
+          "name": "Free",
+          "priceMonthly": 0,
+          "priceAnnualMonthly": 0,
+          "unit": "per user / month",
+          "highlights": [
+            "Up to 3 contractors",
+            "Basic payroll calculations",
+            "Manual tax reports"
+          ],
+          "limits": {
+            "Payees": "3",
+            "Automated Taxes": "No"
+          }
+        },
+        {
+          "name": "Starter",
+          "priceMonthly": 20,
+          "priceAnnualMonthly": 16,
+          "unit": "per user / month",
+          "highlights": [
+            "Up to 20 employees",
+            "Automated payroll runs",
+            "Direct deposit",
+            "Basic tax filing"
+          ],
+          "limits": {
+            "Payees": "20",
+            "Multi-state": "No"
+          }
+        },
+        {
+          "name": "Professional",
+          "priceMonthly": 50,
+          "priceAnnualMonthly": 40,
+          "unit": "per user / month",
+          "highlights": [
+            "Unlimited employees",
+            "Multi-state tax filing",
+            "W-2 and 1099 generation",
+            "General ledger sync"
+          ],
+          "limits": {
+            "Payees": "Unlimited",
+            "Multi-state": "Yes"
+          }
+        },
+        {
+          "name": "Enterprise",
+          "priceMonthly": null,
+          "priceAnnualMonthly": null,
+          "custom": true,
+          "unit": "custom",
+          "highlights": [
+            "Nimbus SSO",
+            "Advanced security and permissions",
+            "Dedicated payroll specialist",
+            "Custom integrations"
+          ],
+          "limits": {
+            "Users": "Unlimited"
+          }
+        }
+      ],
+      "addOns": [
+        {
+          "name": "International Contractor Payments",
+          "price": "$15 / contractor / month",
+          "desc": "Pay international contractors in their local currency across 120 countries."
+        }
+      ],
+      "faqs": [
+        {
+          "q": "What does Nimbus Payroll cost?",
+          "a": "Nimbus Payroll starts with a Free tier for a few contractors, a Starter plan at $20 per user per month, and a Professional plan at $50 per user per month. Enterprise pricing is custom."
+        },
+        {
+          "q": "Is there a free trial?",
+          "a": "Yes, you can run simulated payrolls in our 14-day free trial before connecting your actual bank accounts."
+        },
+        {
+          "q": "What is the refund policy for Nimbus Payroll?",
+          "a": "We provide a 30-day money-back guarantee on all subscription fees. If you are unhappy within the first 30 days, we will refund your software fees."
+        },
+        {
+          "q": "Does Nimbus Payroll handle tax filings automatically?",
+          "a": "Yes, on Starter and higher plans, we automatically calculate, withhold, and file your local, state, and federal payroll taxes."
+        }
+      ],
+      "categoryId": "hr-people"
+    },
+    {
+      "id": "nimbus-desk",
+      "name": "Nimbus Desk",
+      "category": "Customer Support",
+      "tagline": "Omnichannel helpdesk with powerful SLA management.",
+      "summary": "Nimbus Desk brings all your customer conversations into a unified inbox with robust ticketing and automation.",
+      "description": "Nimbus Desk allows your support team to manage customer inquiries from email, social media, phone, and web forms in a single interface. By eliminating the need to switch between different applications, agents can resolve issues faster and maintain a consistent customer experience across all channels.\n\nAdvanced automation rules let you route tickets to the right agents based on skill, workload, or customer tier. You can easily configure complex service level agreements to ensure timely responses, while detailed reporting dashboards give managers full visibility into team performance and bottlenecks.",
+      "keyFeatures": [
+        "Unified omnichannel shared inbox",
+        "Automated ticket routing and assignment",
+        "Customizable Service Level Agreements",
+        "Collision detection to prevent duplicate replies",
+        "Canned responses and macro workflows",
+        "Time tracking and agent activity logs",
+        "Customer satisfaction survey automation",
+        "Custom ticket fields and statuses",
+        "Role-based access controls and permissions"
+      ],
+      "specs": {
+        "Deployment": "Cloud (multi-region)",
+        "API": "REST + Webhooks + SDKs",
+        "Data residency": "US, EU, IN, AU",
+        "Uptime SLA": "99.9%",
+        "Integrations": "200+",
+        "Mobile apps": "iOS, Android",
+        "Support": "24/5 chat & email",
+        "Languages": "English, Spanish, French, German"
+      },
+      "integrations": [
+        "Nimbus CRM",
+        "Nimbus Chat",
+        "Slack",
+        "Google Workspace",
+        "Microsoft 365",
+        "Zapier"
+      ],
+      "tiers": [
+        {
+          "name": "Free",
+          "priceMonthly": 0,
+          "priceAnnualMonthly": 0,
+          "unit": "per user / month",
+          "highlights": [
+            "Email ticketing",
+            "Basic shared inbox",
+            "Standard web widget"
+          ],
+          "limits": {
+            "Users": "Up to 3",
+            "Tickets": "500 per month"
+          }
+        },
+        {
+          "name": "Starter",
+          "priceMonthly": 20,
+          "priceAnnualMonthly": 16,
+          "unit": "per user / month",
+          "highlights": [
+            "Omnichannel inbox",
+            "Basic automations",
+            "Standard SLA policies",
+            "Custom ticket views"
+          ],
+          "limits": {
+            "Users": "Up to 10",
+            "Automations": "50 rules"
+          }
+        },
+        {
+          "name": "Professional",
+          "priceMonthly": 50,
+          "priceAnnualMonthly": 40,
+          "unit": "per user / month",
+          "highlights": [
+            "Advanced routing",
+            "Custom dashboards",
+            "Multiple SLA policies",
+            "CSAT surveys"
+          ],
+          "limits": {
+            "Users": "Up to 50",
+            "Automations": "500 rules"
+          }
+        },
+        {
+          "name": "Enterprise",
+          "priceMonthly": null,
+          "priceAnnualMonthly": null,
+          "custom": true,
+          "unit": "custom",
+          "highlights": [
+            "Nimbus SSO integration",
+            "Advanced data security",
+            "Dedicated success manager",
+            "Sandbox environment"
+          ],
+          "limits": {
+            "Users": "Unlimited",
+            "Automations": "Unlimited"
+          }
+        }
+      ],
+      "addOns": [
+        {
+          "name": "Additional Storage",
+          "price": "$10 / 100GB / month",
+          "desc": "Expand your file attachment storage capacity."
+        }
+      ],
+      "faqs": [
+        {
+          "q": "What does Nimbus Desk cost?",
+          "a": "Nimbus Desk offers a Free tier for up to 3 users. Paid plans start at $20 per user per month on the Starter tier, and $50 per user per month on the Professional tier. Enterprise pricing is custom."
+        },
+        {
+          "q": "Is there a free trial?",
+          "a": "Yes, we offer a 14-day free trial of the Professional plan so you can test all the advanced features before committing."
+        },
+        {
+          "q": "What is the refund policy for Nimbus Desk?",
+          "a": "We offer a 30-day money-back guarantee. If you are not satisfied within your first 30 days of a paid subscription, you can request a full refund."
+        },
+        {
+          "q": "Can I merge duplicate tickets?",
+          "a": "Yes, Nimbus Desk allows agents to easily merge duplicate tickets from the same customer to keep the conversation history clean and organized."
+        }
+      ],
+      "categoryId": "support"
+    },
+    {
+      "id": "nimbus-chat",
+      "name": "Nimbus Chat",
+      "category": "Customer Support",
+      "tagline": "Live chat and AI bots for instant support.",
+      "summary": "Nimbus Chat helps you engage website visitors in real time with proactive messaging and intelligent chatbots.",
+      "description": "Nimbus Chat connects you with your customers exactly when they need help. By embedding our lightweight, customizable widget on your website or mobile app, your team can offer instant assistance, answer product questions, and guide users through the checkout process. Proactive triggers allow you to initiate conversations based on user behavior, reducing bounce rates and increasing conversion.\n\nThe integrated AI chatbot can handle common questions automatically, freeing up your human agents to focus on complex technical issues. When a human touch is required, the bot seamlessly transfers the conversation to an available agent along with the full chat history and user context, ensuring a frictionless support experience.",
+      "keyFeatures": [
+        "Customizable website chat widget",
+        "AI-powered chatbot for self-service",
+        "Proactive chat triggers and campaigns",
+        "Visitor tracking and screen sharing",
+        "Seamless agent handoff",
+        "Pre-chat forms for lead capture",
+        "Canned responses and typing indicators",
+        "In-app messaging for mobile apps",
+        "Chat transcripts and export"
+      ],
+      "specs": {
+        "Deployment": "Cloud (multi-region)",
+        "API": "REST + Webhooks + SDKs",
+        "Data residency": "US, EU, IN, AU",
+        "Uptime SLA": "99.9%",
+        "Integrations": "150+",
+        "Mobile apps": "iOS, Android",
+        "Support": "24/5 chat & email",
+        "Widget Size": "Under 50kb"
+      },
+      "integrations": [
+        "Nimbus Desk",
+        "Nimbus CRM",
+        "Nimbus Campaigns",
+        "Slack",
+        "Google Workspace",
+        "Zapier"
+      ],
+      "tiers": [
+        {
+          "name": "Free",
+          "priceMonthly": 0,
+          "priceAnnualMonthly": 0,
+          "unit": "per user / month",
+          "highlights": [
+            "Basic chat widget",
+            "Standard chat history",
+            "1 active trigger"
+          ],
+          "limits": {
+            "Users": "Up to 2",
+            "Chats": "100 per month"
+          }
+        },
+        {
+          "name": "Starter",
+          "priceMonthly": 15,
+          "priceAnnualMonthly": 12,
+          "unit": "per user / month",
+          "highlights": [
+            "Unlimited chat history",
+            "Proactive triggers",
+            "Pre-chat forms",
+            "Visitor tracking"
+          ],
+          "limits": {
+            "Users": "Up to 10",
+            "Bot Sessions": "500 per month"
+          }
+        },
+        {
+          "name": "Professional",
+          "priceMonthly": 45,
+          "priceAnnualMonthly": 36,
+          "unit": "per user / month",
+          "highlights": [
+            "AI chatbot builder",
+            "Advanced routing",
+            "Multiple widgets",
+            "Chat analytics"
+          ],
+          "limits": {
+            "Users": "Up to 50",
+            "Bot Sessions": "5000 per month"
+          }
+        },
+        {
+          "name": "Enterprise",
+          "priceMonthly": null,
+          "priceAnnualMonthly": null,
+          "custom": true,
+          "unit": "custom",
+          "highlights": [
+            "Nimbus SSO",
+            "Custom AI model training",
+            "Dedicated support",
+            "Advanced security compliance"
+          ],
+          "limits": {
+            "Users": "Unlimited",
+            "Bot Sessions": "Unlimited"
+          }
+        }
+      ],
+      "addOns": [
+        {
+          "name": "Extra Bot Sessions",
+          "price": "$25 / 1000 sessions / month",
+          "desc": "Add more automated AI chatbot sessions to your monthly limit."
+        }
+      ],
+      "faqs": [
+        {
+          "q": "What does Nimbus Chat cost?",
+          "a": "The Free tier is available at no cost. Paid tiers include Starter at $15 per user per month, and Professional at $45 per user per month. Enterprise plans require custom pricing."
+        },
+        {
+          "q": "Is there a free trial?",
+          "a": "Yes, you can try the Professional plan features free for 14 days without entering a credit card."
+        },
+        {
+          "q": "What is the refund policy for Nimbus Chat?",
+          "a": "All paid plans come with a 30-day money-back guarantee. If you cancel within the first 30 days, you will receive a full refund."
+        },
+        {
+          "q": "Can I customize the look of the chat widget?",
+          "a": "Absolutely. You can change the colors, logos, launcher icons, and welcome messages to perfectly match your brand identity."
+        }
+      ],
+      "categoryId": "support"
+    },
+    {
+      "id": "nimbus-knowledge",
+      "name": "Nimbus Knowledge",
+      "category": "Customer Support",
+      "tagline": "Empower customers with self service help centers.",
+      "summary": "Nimbus Knowledge lets you build beautiful, searchable help centers so customers can find answers on their own.",
+      "description": "Nimbus Knowledge provides an intuitive authoring environment for creating, organizing, and publishing support articles, tutorials, and FAQs. By building a comprehensive self service portal, you can significantly reduce the volume of incoming support tickets and provide your customers with 24/7 access to the information they need. The platform supports rich media, allowing you to embed videos, images, and code snippets directly into your documentation.\n\nBeyond content creation, Nimbus Knowledge offers powerful analytics to help you understand what your customers are searching for. You can track article views, analyze failed search queries, and collect feedback ratings to continuously improve your content. The fully customizable portal can be hosted on your own custom domain and styled to match your corporate website seamlessly.",
+      "keyFeatures": [
+        "Drag-and-drop article editor",
+        "Custom domain mapping",
+        "Advanced search with auto-suggest",
+        "Article version history and rollback",
+        "Multi-language support",
+        "Article feedback and rating system",
+        "Internal knowledge base for agents",
+        "SEO optimization tools",
+        "Search analytics and reporting"
+      ],
+      "specs": {
+        "Deployment": "Cloud (multi-region)",
+        "API": "REST + Webhooks + SDKs",
+        "Data residency": "US, EU, IN, AU",
+        "Uptime SLA": "99.9%",
+        "Integrations": "100+",
+        "Mobile apps": "iOS, Android (admin)",
+        "Support": "24/5 chat & email",
+        "Custom CSS/JS": "Supported"
+      },
+      "integrations": [
+        "Nimbus Desk",
+        "Nimbus Sites",
+        "Nimbus Chat",
+        "Google Workspace",
+        "Microsoft 365",
+        "Zapier"
+      ],
+      "tiers": [
+        {
+          "name": "Free",
+          "priceMonthly": 0,
+          "priceAnnualMonthly": 0,
+          "unit": "per user / month",
+          "highlights": [
+            "Standard templates",
+            "Basic article editor",
+            "Nimbus subdomain"
+          ],
+          "limits": {
+            "Users": "Up to 3",
+            "Articles": "50 maximum"
+          }
+        },
+        {
+          "name": "Starter",
+          "priceMonthly": 15,
+          "priceAnnualMonthly": 12,
+          "unit": "per user / month",
+          "highlights": [
+            "Custom domain",
+            "Unlimited articles",
+            "Basic analytics",
+            "SEO tools"
+          ],
+          "limits": {
+            "Users": "Up to 10",
+            "Languages": "1 language"
+          }
+        },
+        {
+          "name": "Professional",
+          "priceMonthly": 35,
+          "priceAnnualMonthly": 28,
+          "unit": "per user / month",
+          "highlights": [
+            "Multi-language support",
+            "Custom CSS and JS",
+            "Version control",
+            "Advanced search analytics"
+          ],
+          "limits": {
+            "Users": "Up to 50",
+            "Languages": "Up to 10"
+          }
+        },
+        {
+          "name": "Enterprise",
+          "priceMonthly": null,
+          "priceAnnualMonthly": null,
+          "custom": true,
+          "unit": "custom",
+          "highlights": [
+            "Nimbus SSO",
+            "Internal agent knowledge base",
+            "Dedicated support",
+            "Custom SLAs"
+          ],
+          "limits": {
+            "Users": "Unlimited",
+            "Languages": "Unlimited"
+          }
+        }
+      ],
+      "addOns": [
+        {
+          "name": "Automated Translation",
+          "price": "$49 / month",
+          "desc": "Automatically translate your articles into up to 10 languages using AI."
+        }
+      ],
+      "faqs": [
+        {
+          "q": "What does Nimbus Knowledge cost?",
+          "a": "Nimbus Knowledge is Free for up to 3 users. The Starter plan is $15 per user per month, and the Professional plan is $35 per user per month. Enterprise pricing is tailored to your needs."
+        },
+        {
+          "q": "Is there a free trial?",
+          "a": "Yes, a 14-day free trial is available for the Professional tier to let you explore custom domains and advanced analytics."
+        },
+        {
+          "q": "What is the refund policy for Nimbus Knowledge?",
+          "a": "We stand by our product with a 30-day money-back guarantee. If you are unhappy during your first month of a paid plan, we will refund your payment."
+        },
+        {
+          "q": "Can I host the help center on my own domain?",
+          "a": "Yes, starting from the Starter plan, you can map your knowledge base to a custom domain or subdomain of your choosing."
+        }
+      ],
+      "categoryId": "support"
+    },
+    {
+      "id": "nimbus-projects",
+      "name": "Nimbus Projects",
+      "category": "Projects & Collaboration",
+      "tagline": "Deliver projects on time with intelligent task management.",
+      "summary": "Nimbus Projects is a comprehensive project management solution designed to help teams plan, track, and execute work efficiently. It combines intuitive task tracking with powerful resource management and timeline views.",
+      "description": "Keep your team aligned and your deliverables on track with Nimbus Projects. By providing a centralized workspace for all your tasks, milestones, and deadlines, this tool eliminates confusion and ensures everyone knows exactly what they need to do and when. Advanced resource allocation features help managers balance workloads across the team to prevent burnout and maximize productivity.\n\nWhether you are running a small marketing campaign or a massive software deployment, Nimbus Projects adapts to your workflow. Integrated time tracking, customizable reporting, and automated status updates give stakeholders complete visibility into project health. Seamless connections with other Nimbus products mean your project data flows effortlessly to your billing and support teams.",
+      "keyFeatures": [
+        "Interactive Gantt charts and timelines",
+        "Customizable task statuses and workflows",
+        "Resource workload capacity planning",
+        "Built-in time tracking and timesheets",
+        "Automated project status reports",
+        "Cross-project portfolio management",
+        "Milestone and dependency tracking",
+        "Project budgeting and cost estimation",
+        "Client portal for external collaboration"
+      ],
+      "specs": {
+        "Deployment": "Cloud (multi-region)",
+        "API": "REST + Webhooks + SDKs",
+        "Data residency": "US, EU, AU",
+        "Uptime SLA": "99.9%",
+        "Integrations": "150+",
+        "Mobile apps": "iOS, Android",
+        "Support": "24/5 chat & email",
+        "Storage per user": "50 GB"
+      },
+      "integrations": [
+        "Nimbus Invoice",
+        "Nimbus People",
+        "Nimbus Analytics",
+        "Slack",
+        "Google Workspace",
+        "Zapier"
+      ],
+      "tiers": [
+        {
+          "name": "Free",
+          "priceMonthly": 0,
+          "priceAnnualMonthly": 0,
+          "unit": "per user / month",
+          "highlights": [
+            "Basic task management",
+            "List and board views",
+            "Up to 3 projects"
+          ],
+          "limits": {
+            "Users": "Up to 5",
+            "Storage": "2 GB"
+          }
+        },
+        {
+          "name": "Starter",
+          "priceMonthly": 10,
+          "priceAnnualMonthly": 8,
+          "unit": "per user / month",
+          "highlights": [
+            "Unlimited projects",
+            "Gantt charts",
+            "Basic reporting"
+          ],
+          "limits": {
+            "Storage": "20 GB",
+            "Guests": "10 per month"
+          }
+        },
+        {
+          "name": "Professional",
+          "priceMonthly": 30,
+          "priceAnnualMonthly": 24,
+          "unit": "per user / month",
+          "highlights": [
+            "Resource management",
+            "Time tracking",
+            "Portfolio views",
+            "Custom workflows"
+          ],
+          "limits": {
+            "Storage": "100 GB",
+            "Guests": "Unlimited"
+          }
+        },
+        {
+          "name": "Enterprise",
+          "priceMonthly": null,
+          "priceAnnualMonthly": null,
+          "custom": true,
+          "unit": "custom",
+          "highlights": [
+            "SSO integration",
+            "Advanced security",
+            "Dedicated support",
+            "Custom data retention",
+            "Audit logs"
+          ],
+          "limits": {
+            "Users": "Unlimited"
+          }
+        }
+      ],
+      "addOns": [
+        {
+          "name": "Premium Client Portals",
+          "price": "$49 / month",
+          "desc": "White-labeled project portals for your external clients."
+        }
+      ],
+      "faqs": [
+        {
+          "q": "What does Nimbus Projects cost?",
+          "a": "We offer a Free tier for small teams, a Starter plan at $10 per user per month, a Professional plan at $30 per user per month, and custom Enterprise pricing."
+        },
+        {
+          "q": "Is there a free trial?",
+          "a": "Yes, all paid plans come with a 14-day free trial so you can explore the advanced features before committing."
+        },
+        {
+          "q": "What is the refund policy for Nimbus Projects?",
+          "a": "We offer a 30-day money-back guarantee. If you are not satisfied within your first month, we will refund your payment in full."
+        },
+        {
+          "q": "Can I track billable hours directly in the app?",
+          "a": "Absolutely. Nimbus Projects includes native time tracking that syncs directly with Nimbus Invoice for seamless client billing."
+        }
+      ],
+      "categoryId": "projects"
+    },
+    {
+      "id": "nimbus-docs",
+      "name": "Nimbus Docs",
+      "category": "Projects & Collaboration",
+      "tagline": "Collaborate on beautiful documents in real time.",
+      "summary": "Nimbus Docs is a modern workspace for team knowledge, offering real-time collaborative editing and rich media support. It serves as your single source of truth for company wikis, meeting notes, and project documentation.",
+      "description": "Empower your team to write, edit, and share ideas instantly with Nimbus Docs. Multiple users can work on the same document simultaneously without locking issues or version conflicts. The intuitive editor supports rich text, inline code blocks, tables, and embedded media, making it easy to build comprehensive knowledge bases or draft quick meeting minutes.\n\nOrganization is effortless with nested folders, tag-based search, and customizable workspaces for different departments. Granular permission controls ensure that sensitive information remains secure while still being accessible to the right people. By integrating directly with your communication and project tools, Nimbus Docs keeps your company knowledge accessible exactly where your team already works.",
+      "keyFeatures": [
+        "Real-time collaborative editing",
+        "Version history and document restoration",
+        "Nested workspaces and folders",
+        "Granular access and permission controls",
+        "Rich media and file embedding",
+        "Inline commenting and team mentions",
+        "Customizable document templates",
+        "Advanced full-text search",
+        "PDF and Markdown export options"
+      ],
+      "specs": {
+        "Deployment": "Cloud (multi-region)",
+        "API": "REST + Webhooks",
+        "Data residency": "US, EU, IN, AU",
+        "Uptime SLA": "99.95%",
+        "Integrations": "100+",
+        "Mobile apps": "iOS, Android, iPadOS",
+        "Support": "24/5 chat & email",
+        "Max file size": "250 MB"
+      },
+      "integrations": [
+        "Nimbus Chat",
+        "Nimbus Projects",
+        "Nimbus Knowledge",
+        "Microsoft 365",
+        "Slack",
+        "Google Workspace"
+      ],
+      "tiers": [
+        {
+          "name": "Free",
+          "priceMonthly": 0,
+          "priceAnnualMonthly": 0,
+          "unit": "per user / month",
+          "highlights": [
+            "Real-time editing",
+            "Basic templates",
+            "Up to 50 documents"
+          ],
+          "limits": {
+            "Users": "Up to 10",
+            "Version history": "7 days"
+          }
+        },
+        {
+          "name": "Starter",
+          "priceMonthly": 8,
+          "priceAnnualMonthly": 6,
+          "unit": "per user / month",
+          "highlights": [
+            "Unlimited documents",
+            "Advanced search",
+            "Guest sharing"
+          ],
+          "limits": {
+            "Version history": "30 days",
+            "Storage": "10 GB"
+          }
+        },
+        {
+          "name": "Professional",
+          "priceMonthly": 15,
+          "priceAnnualMonthly": 12,
+          "unit": "per user / month",
+          "highlights": [
+            "Unlimited version history",
+            "Custom templates",
+            "Page analytics",
+            "Team workspaces"
+          ],
+          "limits": {
+            "Version history": "Unlimited",
+            "Storage": "50 GB"
+          }
+        },
+        {
+          "name": "Enterprise",
+          "priceMonthly": null,
+          "priceAnnualMonthly": null,
+          "custom": true,
+          "unit": "custom",
+          "highlights": [
+            "SSO integration",
+            "Advanced security",
+            "Dedicated support",
+            "Data loss prevention",
+            "Custom domain"
+          ],
+          "limits": {
+            "Users": "Unlimited"
+          }
+        }
+      ],
+      "addOns": [
+        {
+          "name": "Nimbus Docs AI",
+          "price": "$9 / user / month",
+          "desc": "Generative AI writing assistant to summarize notes and draft content."
+        }
+      ],
+      "faqs": [
+        {
+          "q": "What does Nimbus Docs cost?",
+          "a": "Nimbus Docs is free for basic use, $8 per user per month for Starter, $15 per user per month for Professional, and custom for Enterprise."
+        },
+        {
+          "q": "Is there a free trial?",
+          "a": "Yes, you can try the Professional plan free for 14 days."
+        },
+        {
+          "q": "What is the refund policy for Nimbus Docs?",
+          "a": "We provide a 30-day money-back guarantee on all paid subscriptions if it does not meet your expectations."
+        },
+        {
+          "q": "Can I import my existing documents from other platforms?",
+          "a": "Yes, you can import standard formats like Word, Markdown, and text files directly into your workspaces."
+        }
+      ],
+      "categoryId": "projects"
+    },
+    {
+      "id": "nimbus-boards",
+      "name": "Nimbus Boards",
+      "category": "Projects & Collaboration",
+      "tagline": "Visualize workflows with intuitive kanban and online whiteboards.",
+      "summary": "Nimbus Boards provides flexible visual workspaces for brainstorming, sprint planning, and agile workflow management. Teams can seamlessly switch between structured kanban boards and freeform digital whiteboards.",
+      "description": "Bring your ideas to life and streamline your agile processes with Nimbus Boards. Whether your team is mapping out a new user journey on a limitless whiteboard or moving task cards through a structured kanban pipeline, this tool adapts to your creative and operational needs. Sticky notes, drawing tools, and flowchart shapes make remote brainstorming sessions feel just as interactive as being in the same room.\n\nBeyond simple ideation, Nimbus Boards is built for action. You can easily convert whiteboard sticky notes into trackable kanban cards with assignees, due dates, and custom tags. Automated triggers help move cards between columns based on status updates, saving your team from manual data entry. It is the perfect bridge between unstructured creativity and organized execution.",
+      "keyFeatures": [
+        "Infinite canvas digital whiteboards",
+        "Customizable kanban board layouts",
+        "Sticky notes and drawing tools",
+        "Flowchart and diagramming shapes",
+        "Card assignments and due dates",
+        "WIP (Work In Progress) limits",
+        "Automated board rules and triggers",
+        "Real-time cursor tracking",
+        "Voting and team polling features",
+        "Board export to image or PDF"
+      ],
+      "specs": {
+        "Deployment": "Cloud (multi-region)",
+        "API": "REST + Webhooks",
+        "Data residency": "US, EU",
+        "Uptime SLA": "99.9%",
+        "Integrations": "80+",
+        "Mobile apps": "iOS, Android, Tablet",
+        "Support": "24/5 chat & email",
+        "Canvas size": "Infinite"
+      },
+      "integrations": [
+        "Nimbus Projects",
+        "Nimbus Desk",
+        "Nimbus Dashboards",
+        "Jira",
+        "Microsoft Teams",
+        "Zoom"
+      ],
+      "tiers": [
+        {
+          "name": "Free",
+          "priceMonthly": 0,
+          "priceAnnualMonthly": 0,
+          "unit": "per user / month",
+          "highlights": [
+            "3 whiteboards",
+            "Basic kanban features",
+            "Standard shapes"
+          ],
+          "limits": {
+            "Boards": "3",
+            "Users": "Up to 5"
+          }
+        },
+        {
+          "name": "Starter",
+          "priceMonthly": 12,
+          "priceAnnualMonthly": 9,
+          "unit": "per user / month",
+          "highlights": [
+            "Unlimited boards",
+            "Custom card fields",
+            "Board templates"
+          ],
+          "limits": {
+            "Automations": "100 per month",
+            "Guests": "5 per board"
+          }
+        },
+        {
+          "name": "Professional",
+          "priceMonthly": 25,
+          "priceAnnualMonthly": 20,
+          "unit": "per user / month",
+          "highlights": [
+            "Advanced automations",
+            "Voting and polling",
+            "WIP limits",
+            "Cross-board reporting"
+          ],
+          "limits": {
+            "Automations": "10,000 per month",
+            "Guests": "Unlimited"
+          }
+        },
+        {
+          "name": "Enterprise",
+          "priceMonthly": null,
+          "priceAnnualMonthly": null,
+          "custom": true,
+          "unit": "custom",
+          "highlights": [
+            "SSO and provisioning",
+            "Advanced security",
+            "Dedicated support",
+            "Admin board controls",
+            "Custom integrations"
+          ],
+          "limits": {
+            "Users": "Unlimited"
+          }
+        }
+      ],
+      "addOns": [
+        {
+          "name": "Agile Coaching Templates",
+          "price": "$19 / month",
+          "desc": "A premium library of agile frameworks and retrospective templates."
+        }
+      ],
+      "faqs": [
+        {
+          "q": "What does Nimbus Boards cost?",
+          "a": "Pricing ranges from a Free tier to $12 per user per month for Starter, $25 for Professional, and custom Enterprise pricing."
+        },
+        {
+          "q": "Is there a free trial?",
+          "a": "Yes, sign up for a 14-day free trial of the Professional plan to test all premium features."
+        },
+        {
+          "q": "What is the refund policy for Nimbus Boards?",
+          "a": "All paid plans are backed by a 30-day money-back guarantee."
+        },
+        {
+          "q": "Can I link kanban cards to Nimbus Projects tasks?",
+          "a": "Yes, Nimbus Boards integrates natively with Nimbus Projects, allowing you to sync cards and tasks bidirectionally."
+        }
+      ],
+      "categoryId": "projects"
+    },
+    {
+      "id": "nimbus-analytics",
+      "name": "Nimbus Analytics",
+      "category": "Analytics & BI",
+      "tagline": "Self-serve business intelligence and reporting made easy.",
+      "summary": "Nimbus Analytics empowers your team to explore data, build custom reports, and uncover actionable insights without writing code.",
+      "description": "Nimbus Analytics transforms raw data into meaningful business intelligence. Users can drag and drop fields to create comprehensive reports, visualize trends, and share findings across the organization seamlessly.\n\nWith native connections to the entire Nimbus suite and external data sources, you can blend sales, marketing, and finance data into a single source of truth. Automated scheduled reports ensure stakeholders always have the latest metrics in their inbox.",
+      "keyFeatures": [
+        "Drag-and-drop report builder",
+        "Interactive data visualization library",
+        "Automated email report scheduling",
+        "Cross-module data blending",
+        "AI-powered insight generation",
+        "Export to PDF, CSV, and Excel",
+        "Granular row-level security permissions",
+        "Custom formula builder",
+        "Embedded analytics for external portals"
+      ],
+      "specs": {
+        "Deployment": "Cloud (multi-region)",
+        "API": "REST API + SDKs",
+        "Data residency": "US, EU, AU",
+        "Uptime SLA": "99.9%",
+        "Integrations": "150+",
+        "Mobile apps": "iOS, Android",
+        "Support": "24/5 chat & email",
+        "Export Formats": "CSV, Excel, PDF, JSON"
+      },
+      "integrations": [
+        "Nimbus CRM",
+        "Nimbus Books",
+        "Nimbus Campaigns",
+        "Google Workspace",
+        "Microsoft 365"
+      ],
+      "tiers": [
+        {
+          "name": "Free",
+          "priceMonthly": 0,
+          "priceAnnualMonthly": 0,
+          "unit": "per user / month",
+          "highlights": [
+            "Basic reporting",
+            "3 dashboards",
+            "Standard charts"
+          ],
+          "limits": {
+            "Rows per report": "10,000",
+            "Storage": "1GB"
+          }
+        },
+        {
+          "name": "Starter",
+          "priceMonthly": 15,
+          "priceAnnualMonthly": 12,
+          "unit": "per user / month",
+          "highlights": [
+            "Unlimited reports",
+            "Scheduled emails",
+            "Custom formulas"
+          ],
+          "limits": {
+            "Rows per report": "100,000",
+            "Storage": "10GB"
+          }
+        },
+        {
+          "name": "Professional",
+          "priceMonthly": 45,
+          "priceAnnualMonthly": 36,
+          "unit": "per user / month",
+          "highlights": [
+            "AI insights",
+            "Data blending",
+            "Row-level security",
+            "Embedded analytics"
+          ],
+          "limits": {
+            "Rows per report": "1,000,000",
+            "Storage": "100GB"
+          }
+        },
+        {
+          "name": "Enterprise",
+          "priceMonthly": null,
+          "priceAnnualMonthly": null,
+          "custom": true,
+          "unit": "custom",
+          "highlights": [
+            "SSO",
+            "Advanced security",
+            "Dedicated support",
+            "Custom data residency",
+            "Unlimited API access"
+          ],
+          "limits": {
+            "Users": "Unlimited"
+          }
+        }
+      ],
+      "addOns": [
+        {
+          "name": "Premium AI Insights",
+          "price": "$10 / user / month",
+          "desc": "Advanced machine learning forecasting and anomaly detection capabilities."
+        }
+      ],
+      "faqs": [
+        {
+          "q": "What does Nimbus Analytics cost?",
+          "a": "We offer a Free tier for basic needs, a Starter plan at $15 per user per month, a Professional plan at $45 per user per month, and custom Enterprise pricing."
+        },
+        {
+          "q": "Is there a free trial?",
+          "a": "Yes, all paid plans come with a 14-day free trial so you can test our advanced features."
+        },
+        {
+          "q": "What is the refund policy for Nimbus Analytics?",
+          "a": "We offer a 30-day money-back guarantee if you are not completely satisfied with your purchase."
+        },
+        {
+          "q": "Can I embed reports in my own application?",
+          "a": "Yes, embedded analytics is available on the Professional and Enterprise plans."
+        }
+      ],
+      "categoryId": "analytics"
+    },
+    {
+      "id": "nimbus-dashboards",
+      "name": "Nimbus Dashboards",
+      "category": "Analytics & BI",
+      "tagline": "Real-time operational dashboards and alerts for teams.",
+      "summary": "Monitor your vital business metrics in real time with interactive dashboards and instant alerts for critical changes.",
+      "description": "Nimbus Dashboards provides a live view of your operations by connecting directly to your most important data streams. Create beautiful, TV-ready displays that keep your entire team aligned on daily goals and performance indicators.\n\nSet up custom threshold alerts to notify your team via email or chat the moment a metric drops below or spikes above your target. Stay proactive and resolve operational bottlenecks before they impact your business.",
+      "keyFeatures": [
+        "Real-time data refresh",
+        "TV mode for office displays",
+        "Custom metric threshold alerts",
+        "Pre-built dashboard templates",
+        "Mobile-optimized viewing",
+        "Public and private sharing links",
+        "Conditional formatting rules",
+        "Dark mode and custom themes"
+      ],
+      "specs": {
+        "Deployment": "Cloud (multi-region)",
+        "API": "REST API + Webhooks",
+        "Data residency": "US, EU, AU, IN",
+        "Uptime SLA": "99.95%",
+        "Integrations": "200+",
+        "Mobile apps": "iOS, Android",
+        "Support": "24/5 chat & email",
+        "Refresh Rate": "Up to 1 minute"
+      },
+      "integrations": [
+        "Nimbus Desk",
+        "Nimbus Projects",
+        "Nimbus Social",
+        "Slack",
+        "Zapier"
+      ],
+      "tiers": [
+        {
+          "name": "Free",
+          "priceMonthly": 0,
+          "priceAnnualMonthly": 0,
+          "unit": "per user / month",
+          "highlights": [
+            "1 dashboard",
+            "Standard widgets",
+            "Daily refresh"
+          ],
+          "limits": {
+            "Dashboards": "1",
+            "Alerts": "None"
+          }
+        },
+        {
+          "name": "Starter",
+          "priceMonthly": 10,
+          "priceAnnualMonthly": 8,
+          "unit": "per user / month",
+          "highlights": [
+            "10 dashboards",
+            "Hourly refresh",
+            "Basic alerts",
+            "TV mode"
+          ],
+          "limits": {
+            "Dashboards": "10",
+            "Alerts": "50 per month"
+          }
+        },
+        {
+          "name": "Professional",
+          "priceMonthly": 30,
+          "priceAnnualMonthly": 24,
+          "unit": "per user / month",
+          "highlights": [
+            "Unlimited dashboards",
+            "Minute-by-minute refresh",
+            "Advanced threshold alerts",
+            "Custom themes"
+          ],
+          "limits": {
+            "Dashboards": "Unlimited",
+            "Alerts": "Unlimited"
+          }
+        },
+        {
+          "name": "Enterprise",
+          "priceMonthly": null,
+          "priceAnnualMonthly": null,
+          "custom": true,
+          "unit": "custom",
+          "highlights": [
+            "SSO",
+            "Advanced security",
+            "Dedicated support",
+            "White-labeling",
+            "Audit logs"
+          ],
+          "limits": {
+            "Users": "Unlimited"
+          }
+        }
+      ],
+      "addOns": [
+        {
+          "name": "Extra Alert Credits",
+          "price": "$5 / month",
+          "desc": "Add 500 additional SMS or webhook alerts to your monthly quota."
+        }
+      ],
+      "faqs": [
+        {
+          "q": "What does Nimbus Dashboards cost?",
+          "a": "Pricing starts with a Free tier, followed by Starter at $10 per user per month, Professional at $30 per user per month, and custom Enterprise plans."
+        },
+        {
+          "q": "Is there a free trial?",
+          "a": "Yes, you can try the Professional plan features free for 14 days."
+        },
+        {
+          "q": "What is the refund policy for Nimbus Dashboards?",
+          "a": "We provide a complete 30-day money-back guarantee on all initial paid subscriptions."
+        },
+        {
+          "q": "Can I display these dashboards on office TVs?",
+          "a": "Absolutely, our dedicated TV mode optimizes the layout for large screens and automatically cycles through multiple dashboard tabs."
+        }
+      ],
+      "categoryId": "analytics"
+    },
+    {
+      "id": "nimbus-datapipe",
+      "name": "Nimbus DataPipe",
+      "category": "Analytics & BI",
+      "tagline": "No-code ETL and data integration made simple.",
+      "summary": "Seamlessly move data between your favorite apps and data warehouses without writing a single line of code.",
+      "description": "Nimbus DataPipe takes the complexity out of ETL by providing intuitive visual pipelines for data extraction, transformation, and loading. Connect your operational apps to your central data warehouse in minutes to ensure your analytics tools always have fresh data.\n\nBuilt-in transformation nodes allow you to clean, filter, and map fields on the fly. With robust error handling and automated retry logic, you can trust that your data will arrive accurately and securely every time.",
+      "keyFeatures": [
+        "Visual pipeline builder",
+        "Pre-built application connectors",
+        "Automated schema mapping",
+        "In-flight data transformation",
+        "Scheduled and triggered syncs",
+        "Comprehensive sync history and logs",
+        "Automated error retries",
+        "Support for major data warehouses",
+        "Custom webhook endpoints"
+      ],
+      "specs": {
+        "Deployment": "Cloud (multi-region)",
+        "API": "REST API + Webhooks",
+        "Data residency": "US, EU",
+        "Uptime SLA": "99.99%",
+        "Integrations": "300+",
+        "Mobile apps": "None",
+        "Support": "24/7 chat & email",
+        "Sync Frequency": "Up to 5 minutes"
+      },
+      "integrations": [
+        "Nimbus CRM",
+        "Nimbus Invoice",
+        "Snowflake",
+        "Amazon Redshift",
+        "Google BigQuery",
+        "Zapier"
+      ],
+      "tiers": [
+        {
+          "name": "Free",
+          "priceMonthly": 0,
+          "priceAnnualMonthly": 0,
+          "unit": "per user / month",
+          "highlights": [
+            "3 active pipelines",
+            "Daily syncs",
+            "Basic transformations"
+          ],
+          "limits": {
+            "Records synced": "50,000 per month",
+            "Pipelines": "3"
+          }
+        },
+        {
+          "name": "Starter",
+          "priceMonthly": 25,
+          "priceAnnualMonthly": 20,
+          "unit": "per user / month",
+          "highlights": [
+            "10 active pipelines",
+            "Hourly syncs",
+            "Standard connectors",
+            "Email alerts"
+          ],
+          "limits": {
+            "Records synced": "500,000 per month",
+            "Pipelines": "10"
+          }
+        },
+        {
+          "name": "Professional",
+          "priceMonthly": 65,
+          "priceAnnualMonthly": 52,
+          "unit": "per user / month",
+          "highlights": [
+            "Unlimited pipelines",
+            "5-minute syncs",
+            "Advanced transformations",
+            "Premium connectors"
+          ],
+          "limits": {
+            "Records synced": "5,000,000 per month",
+            "Pipelines": "Unlimited"
+          }
+        },
+        {
+          "name": "Enterprise",
+          "priceMonthly": null,
+          "priceAnnualMonthly": null,
+          "custom": true,
+          "unit": "custom",
+          "highlights": [
+            "SSO",
+            "Advanced security",
+            "Dedicated support",
+            "Real-time sync",
+            "Dedicated infrastructure"
+          ],
+          "limits": {
+            "Users": "Unlimited"
+          }
+        }
+      ],
+      "addOns": [
+        {
+          "name": "Additional Sync Volume",
+          "price": "$20 / month",
+          "desc": "Add 1,000,000 extra records to your monthly sync limit."
+        }
+      ],
+      "faqs": [
+        {
+          "q": "What does Nimbus DataPipe cost?",
+          "a": "We offer a Free tier, a Starter plan at $25 per user per month, a Professional plan at $65 per user per month, and Enterprise pricing upon request."
+        },
+        {
+          "q": "Is there a free trial?",
+          "a": "Yes, new users can explore all Professional features with a 14-day free trial."
+        },
+        {
+          "q": "What is the refund policy for Nimbus DataPipe?",
+          "a": "All paid plans are backed by our 30-day money-back guarantee for your peace of mind."
+        },
+        {
+          "q": "Which data warehouses are supported?",
+          "a": "We currently support Amazon Redshift, Google BigQuery, Snowflake, and PostgreSQL."
+        }
+      ],
+      "categoryId": "analytics"
+    },
+    {
+      "id": "nimbus-vault",
+      "name": "Nimbus Vault",
+      "category": "IT & Security",
+      "tagline": "Secure password and secrets management for teams.",
+      "summary": "Nimbus Vault helps teams store, share, and manage passwords and infrastructure secrets securely. It ensures your sensitive credentials are encrypted and easily accessible only to authorized personnel.",
+      "description": "Nimbus Vault provides a highly secure, centralized repository for all your company passwords, API keys, and infrastructure secrets. Built with zero-knowledge encryption, it guarantees that only your team can access your sensitive data, protecting your organization from credential theft and unauthorized access.\n\nBeyond basic password management, Nimbus Vault offers advanced role-based access control, automated credential rotation, and comprehensive audit logs. Whether you are a small team sharing web logins or a large enterprise managing database credentials across multiple environments, Vault scales to meet your security needs seamlessly.",
+      "keyFeatures": [
+        "Zero-knowledge end-to-end encryption",
+        "Secure password sharing and shared folders",
+        "API key and infrastructure secret storage",
+        "Automated password rotation",
+        "Role-based access control (RBAC)",
+        "Comprehensive audit trails and reporting",
+        "Browser extensions for seamless auto-fill",
+        "Offline access mode for emergencies",
+        "Biometric authentication support",
+        "Dark web credential monitoring"
+      ],
+      "specs": {
+        "Deployment": "Cloud (multi-region)",
+        "API": "REST + CLI + SDKs",
+        "Data residency": "US, EU, IN, AU",
+        "Uptime SLA": "99.9%",
+        "Integrations": "50+",
+        "Mobile apps": "iOS, Android",
+        "Support": "24/5 chat & email",
+        "Encryption": "AES-256 bit"
+      },
+      "integrations": [
+        "Nimbus SSO",
+        "Nimbus Projects",
+        "Google Workspace",
+        "Microsoft 365",
+        "Slack"
+      ],
+      "tiers": [
+        {
+          "name": "Free",
+          "priceMonthly": 0,
+          "priceAnnualMonthly": 0,
+          "unit": "per user / month",
+          "highlights": [
+            "Secure password vault",
+            "Basic sharing capabilities",
+            "Browser extensions"
+          ],
+          "limits": {
+            "Users": "Up to 3",
+            "Storage": "1GB"
+          }
+        },
+        {
+          "name": "Starter",
+          "priceMonthly": 10,
+          "priceAnnualMonthly": 8,
+          "unit": "per user / month",
+          "highlights": [
+            "Unlimited shared folders",
+            "Advanced permissions",
+            "Priority device sync"
+          ],
+          "limits": {
+            "Users": "Up to 50",
+            "Storage": "5GB"
+          }
+        },
+        {
+          "name": "Professional",
+          "priceMonthly": 25,
+          "priceAnnualMonthly": 20,
+          "unit": "per user / month",
+          "highlights": [
+            "API secret management",
+            "Detailed audit logs",
+            "Dark web monitoring",
+            "Custom password policies"
+          ],
+          "limits": {
+            "Users": "Unlimited",
+            "Storage": "50GB"
+          }
+        },
+        {
+          "name": "Enterprise",
+          "priceMonthly": null,
+          "priceAnnualMonthly": null,
+          "custom": true,
+          "unit": "custom",
+          "highlights": [
+            "SSO integration",
+            "Advanced security reporting",
+            "Self-hosted key management",
+            "Dedicated support"
+          ],
+          "limits": {
+            "Users": "Unlimited",
+            "Storage": "Unlimited"
+          }
+        }
+      ],
+      "addOns": [
+        {
+          "name": "Advanced Threat Intelligence",
+          "price": "$5 / user / month",
+          "desc": "Proactively scans and alerts on compromised credentials across the dark web."
+        }
+      ],
+      "faqs": [
+        {
+          "q": "What does Nimbus Vault cost?",
+          "a": "Nimbus Vault offers a Free tier for up to 3 users, a Starter tier at 10 USD per user per month, a Professional tier at 25 USD per user per month, and custom Enterprise pricing."
+        },
+        {
+          "q": "Is there a free trial?",
+          "a": "Yes, we offer a 14-day free trial for the Starter and Professional tiers so you can test all premium features."
+        },
+        {
+          "q": "What is the refund policy for Nimbus Vault?",
+          "a": "We offer a 30-day money-back guarantee for all paid plans if you are not completely satisfied."
+        },
+        {
+          "q": "Can I recover my data if I lose my master password?",
+          "a": "Because Nimbus Vault uses zero-knowledge encryption, we cannot recover your master password, but administrators can configure account recovery policies for managed users."
+        }
+      ],
+      "categoryId": "it-security"
+    },
+    {
+      "id": "nimbus-sso",
+      "name": "Nimbus SSO",
+      "category": "IT & Security",
+      "tagline": "Seamless identity and access management for business.",
+      "summary": "Nimbus SSO provides secure single sign-on and identity management for your entire workforce. It simplifies access to all your web and mobile applications with one set of credentials.",
+      "description": "Nimbus SSO streamlines the login experience by connecting your employees to all their essential applications through a single, secure portal. By eliminating the need for multiple passwords, it reduces helpdesk tickets and improves user productivity while enforcing strong authentication policies across your organization.\n\nSecurity is paramount, which is why Nimbus SSO includes adaptive multi-factor authentication, contextual access policies, and automated user provisioning. IT administrators gain complete visibility and control over who has access to what, ensuring compliance and protecting company data from unauthorized entry.",
+      "keyFeatures": [
+        "Single sign-on (SSO) for web and mobile",
+        "Adaptive multi-factor authentication (MFA)",
+        "Automated user provisioning and deprovisioning (SCIM)",
+        "Integration with Active Directory and LDAP",
+        "Contextual and location-based access policies",
+        "Customizable login portal",
+        "Self-service password reset",
+        "Unified directory management",
+        "Extensive app integration catalog",
+        "Detailed access and authentication logs"
+      ],
+      "specs": {
+        "Deployment": "Cloud (multi-region)",
+        "API": "REST + SCIM + Webhooks",
+        "Data residency": "US, EU, IN, AU",
+        "Uptime SLA": "99.99%",
+        "Integrations": "1000+",
+        "Mobile apps": "iOS, Android",
+        "Support": "24/7 chat & email",
+        "Protocols": "SAML 2.0 & OIDC"
+      },
+      "integrations": [
+        "Nimbus Vault",
+        "Nimbus People",
+        "Google Workspace",
+        "Microsoft 365",
+        "Zapier"
+      ],
+      "tiers": [
+        {
+          "name": "Free",
+          "priceMonthly": 0,
+          "priceAnnualMonthly": 0,
+          "unit": "per user / month",
+          "highlights": [
+            "SSO for up to 3 apps",
+            "Basic directory",
+            "Standard MFA"
+          ],
+          "limits": {
+            "Users": "Up to 10",
+            "Apps": "3"
+          }
+        },
+        {
+          "name": "Starter",
+          "priceMonthly": 15,
+          "priceAnnualMonthly": 12,
+          "unit": "per user / month",
+          "highlights": [
+            "Unlimited SSO apps",
+            "Custom login portal",
+            "Group-based access"
+          ],
+          "limits": {
+            "Users": "Up to 100",
+            "Directories": "1"
+          }
+        },
+        {
+          "name": "Professional",
+          "priceMonthly": 35,
+          "priceAnnualMonthly": 28,
+          "unit": "per user / month",
+          "highlights": [
+            "Adaptive MFA",
+            "Automated provisioning (SCIM)",
+            "Active Directory integration",
+            "Advanced reporting"
+          ],
+          "limits": {
+            "Users": "Unlimited",
+            "Directories": "5"
+          }
+        },
+        {
+          "name": "Enterprise",
+          "priceMonthly": null,
+          "priceAnnualMonthly": null,
+          "custom": true,
+          "unit": "custom",
+          "highlights": [
+            "Custom SSO connections",
+            "Advanced security policies",
+            "SLA guarantees",
+            "Dedicated support"
+          ],
+          "limits": {
+            "Users": "Unlimited",
+            "Directories": "Unlimited"
+          }
+        }
+      ],
+      "addOns": [
+        {
+          "name": "Advanced Identity Protection",
+          "price": "$8 / user / month",
+          "desc": "Adds machine learning driven risk scoring to prevent unauthorized access attempts."
+        }
+      ],
+      "faqs": [
+        {
+          "q": "What does Nimbus SSO cost?",
+          "a": "We have a Free tier for small teams, Starter at 15 USD per user per month, Professional at 35 USD per user per month, and custom Enterprise plans."
+        },
+        {
+          "q": "Is there a free trial?",
+          "a": "Yes, you can evaluate the Professional tier features with a full 14-day free trial."
+        },
+        {
+          "q": "What is the refund policy for Nimbus SSO?",
+          "a": "All paid plans are backed by a 30-day money-back guarantee, no questions asked."
+        },
+        {
+          "q": "Does Nimbus SSO support custom SAML applications?",
+          "a": "Yes, you can easily configure custom SAML 2.0 and OIDC connections for any internal or third-party application."
+        }
+      ],
+      "categoryId": "it-security"
+    },
+    {
+      "id": "nimbus-endpoint",
+      "name": "Nimbus Endpoint",
+      "category": "IT & Security",
+      "tagline": "Comprehensive device management and endpoint security.",
+      "summary": "Nimbus Endpoint allows IT teams to manage, secure, and monitor company-owned and bring-your-own devices from a single cloud console. It protects your endpoints against malware and unauthorized access.",
+      "description": "Nimbus Endpoint simplifies mobile device management (MDM) and endpoint protection for modern, distributed workforces. IT administrators can easily deploy applications, enforce security policies, and wipe lost devices remotely, ensuring that corporate data remains secure regardless of where employees are working.\n\nIn addition to device management, Nimbus Endpoint includes next-generation antivirus and threat detection capabilities. It continuously monitors device health, blocks malicious software, and provides instant alerts for suspicious activities, giving your security team the tools they need to respond to threats in real time.",
+      "keyFeatures": [
+        "Cross-platform device management (Windows, Mac, iOS, Android)",
+        "Remote lock and wipe capabilities",
+        "Automated patch management and OS updates",
+        "Next-generation antivirus (NGAV)",
+        "Bring Your Own Device (BYOD) separation",
+        "Application deployment and blacklisting",
+        "USB device control and encryption enforcement",
+        "Real-time device health monitoring",
+        "Geolocation tracking for lost devices",
+        "Automated compliance reporting"
+      ],
+      "specs": {
+        "Deployment": "Cloud (multi-region)",
+        "API": "REST + Webhooks + SDKs",
+        "Data residency": "US, EU, IN, AU",
+        "Uptime SLA": "99.9%",
+        "Integrations": "100+",
+        "Mobile apps": "iOS, Android",
+        "Support": "24/7 chat & email",
+        "Agent Footprint": "Under 20MB"
+      },
+      "integrations": [
+        "Nimbus SSO",
+        "Nimbus Desk",
+        "Nimbus Analytics",
+        "Microsoft 365",
+        "Slack"
+      ],
+      "tiers": [
+        {
+          "name": "Free",
+          "priceMonthly": 0,
+          "priceAnnualMonthly": 0,
+          "unit": "per user / month",
+          "highlights": [
+            "Basic MDM",
+            "Remote lock",
+            "Device inventory"
+          ],
+          "limits": {
+            "Devices": "Up to 15",
+            "Policies": "1"
+          }
+        },
+        {
+          "name": "Starter",
+          "priceMonthly": 20,
+          "priceAnnualMonthly": 16,
+          "unit": "per user / month",
+          "highlights": [
+            "Patch management",
+            "Application deployment",
+            "BYOD support"
+          ],
+          "limits": {
+            "Devices": "Up to 100",
+            "Policies": "5"
+          }
+        },
+        {
+          "name": "Professional",
+          "priceMonthly": 45,
+          "priceAnnualMonthly": 36,
+          "unit": "per user / month",
+          "highlights": [
+            "Next-gen antivirus",
+            "USB control",
+            "Geolocation tracking",
+            "Compliance reporting"
+          ],
+          "limits": {
+            "Devices": "Unlimited",
+            "Policies": "Unlimited"
+          }
+        },
+        {
+          "name": "Enterprise",
+          "priceMonthly": null,
+          "priceAnnualMonthly": null,
+          "custom": true,
+          "unit": "custom",
+          "highlights": [
+            "SSO integration",
+            "Advanced threat hunting",
+            "Custom integrations",
+            "Dedicated support"
+          ],
+          "limits": {
+            "Users": "Unlimited",
+            "API Calls": "Unlimited"
+          }
+        }
+      ],
+      "addOns": [
+        {
+          "name": "Managed Threat Response",
+          "price": "$12 / device / month",
+          "desc": "Provides 24/7 monitoring and incident response by our team of security experts."
+        }
+      ],
+      "faqs": [
+        {
+          "q": "What does Nimbus Endpoint cost?",
+          "a": "Pricing starts with a Free tier, moves to Starter at 20 USD per user per month, Professional at 45 USD per user per month, and Enterprise for custom needs."
+        },
+        {
+          "q": "Is there a free trial?",
+          "a": "Yes, we offer a 14-day free trial on our Starter and Professional plans."
+        },
+        {
+          "q": "What is the refund policy for Nimbus Endpoint?",
+          "a": "We stand by our product with a full 30-day money-back guarantee for all new subscriptions."
+        },
+        {
+          "q": "Will the endpoint agent slow down employee computers?",
+          "a": "No, our agent is designed to be ultra-lightweight and consumes minimal system resources during background scans."
+        }
+      ],
+      "categoryId": "it-security"
+    }
+  ]
+}

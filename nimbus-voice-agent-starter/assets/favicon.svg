@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64" role="img" aria-label="Nimbus">
+  <defs>
+    <linearGradient id="nimbusTile" x1="0" y1="0" x2="64" y2="64" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#6366f1"/>
+      <stop offset="0.55" stop-color="#4f46e5"/>
+      <stop offset="1" stop-color="#0ea5e9"/>
+    </linearGradient>
+    <linearGradient id="nimbusCloud" x1="14" y1="20" x2="50" y2="48" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#ffffff"/>
+      <stop offset="1" stop-color="#e0e7ff"/>
+    </linearGradient>
+  </defs>
+  <rect width="64" height="64" rx="16" fill="url(#nimbusTile)"/>
+  <rect width="64" height="64" rx="16" fill="#ffffff" opacity="0.06"/>
+  <g fill="url(#nimbusCloud)">
+    <path d="M22 44a10 10 0 0 1-1.6-19.87 13 13 0 0 1 24.2-3.1A9.5 9.5 0 0 1 44 44z"/>
+  </g>
+  <circle cx="44.5" cy="20.5" r="3.4" fill="#ffffff" opacity="0.85"/>
+</svg>

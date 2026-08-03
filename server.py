@@ -2582,10 +2582,23 @@ async def speak_to_phone(
 
 # Mount static frontend files
 static_dir = os.path.join(os.path.dirname(__file__), "nimbus-voice-agent-starter")
-if os.path.exists(static_dir):
+index_file = os.path.join(static_dir, "index.html")
+if os.path.exists(index_file):
     app.mount("/", StaticFiles(directory=static_dir, html=True), name="static")
+else:
+    @app.get("/")
+    def root_status():
+        return {
+            "status": "online",
+            "message": "Nimbus Voice Agent API Server is running.",
+            "endpoints": {
+                "incoming_call": "/api/phone/incoming-call",
+                "vobiz_stream": "/api/phone/vobiz-stream"
+            }
+        }
 
 if __name__ == "__main__":
     import uvicorn
     # Run uvicorn on port 8000
     uvicorn.run(app, host="127.0.0.1", port=8000)
+

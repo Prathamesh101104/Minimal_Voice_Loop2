@@ -1,0 +1,15 @@
+# Local env / keys (never commit secrets)
+.env
+.env.*
+*.key
+
+# OS / editor noise
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Dependencies / build output (none needed for this static site)
+node_modules/
+__pycache__/
+.vercel
