@@ -2263,7 +2263,9 @@ async def vobiz_stream(websocket: WebSocket):
         logger.info("Processing utterance: %d bytes", len(audio))
         transcript = await _gemini_transcribe_phone_audio(audio, sample_rate)
         if not transcript or len(transcript.strip()) < 2:
-            logger.warning("Vobiz stream received no usable transcript.")
+            logger.warning("Vobiz stream received no usable transcript, sending gentle prompt.")
+            # Speak back to the caller instead of staying silent!
+            await speak_to_caller("I didn't quite catch that. How can I help you with Nimbus products, pricing, or features today?")
             return
         logger.info("Vobiz stream transcript: %s", transcript)
 
@@ -2309,7 +2311,8 @@ async def vobiz_stream(websocket: WebSocket):
             return
         rms = math.sqrt(sum(sample * sample for sample in samples) / max(len(samples), 1))
         peak = max(abs(sample) for sample in samples)
-        is_voice = rms > 20 or peak > 70
+        # Mobile phone lines have background noise (RMS 20-60). Use higher threshold for real human voice.
+        is_voice = rms > 90 or peak > 300
         endpoint_ms = int(config_state.get("endpoint_duration") or 600)
 
         if not speech_started:
@@ -2319,7 +2322,8 @@ async def vobiz_stream(websocket: WebSocket):
             speech_started = True
             silence_ms = 0
             logger.info("Speech detected at frame %d (RMS=%.1f peak=%d), buffering with pre-roll...", media_frames, rms, peak)
-            if stream_id and agent_speaking:
+            # Only clear audio / cancel greeting if caller is speaking loudly (rms > 180 or peak > 500)
+            if stream_id and agent_speaking and (rms > 180 or peak > 500):
                 await websocket.send_json({"event": "clearAudio", "streamId": stream_id})
                 agent_speaking = False
                 if greeting_task and not greeting_task.done():
