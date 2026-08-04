@@ -1895,7 +1895,12 @@ async def _gemini_transcribe_phone_audio(audio: bytes, sample_rate: int) -> str:
     if not audio:
         return ""
 
-    wav_audio = pcm_to_wav(audio, sample_rate=sample_rate)
+    if sample_rate != 16000:
+        audio_resampled = resample_pcm(audio, sample_rate, 16000)
+        wav_audio = pcm_to_wav(audio_resampled, sample_rate=16000)
+    else:
+        wav_audio = pcm_to_wav(audio, sample_rate=sample_rate)
+
     backend = _select_phone_transcription_backend()
 
     if backend == "gemini":
@@ -1904,10 +1909,11 @@ async def _gemini_transcribe_phone_audio(audio: bytes, sample_rate: int) -> str:
             url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key={key}"
             body = {
                 "contents": [{"parts": [
-                    {"text": "Transcribe this phone call audio exactly. Return only the caller's spoken words."},
+                    {"text": "Transcribe the spoken speech from this phone call audio accurately into text. Output only the transcript text."},
                     {"inlineData": {"mimeType": "audio/wav", "data": base64.b64encode(wav_audio).decode()}}
                 ]}]
             }
+
             try:
                 async with httpx.AsyncClient() as client:
                     response = await client.post(url, json=body, timeout=30.0)
@@ -2246,7 +2252,8 @@ async def vobiz_stream(websocket: WebSocket):
     call_id = None
     sample_rate = VOBIZ_STREAM_SAMPLE_RATE
     audio_buffer = bytearray()
-    pre_roll_buffer = collections.deque(maxlen=10)
+    pre_roll_buffer = collections.deque(maxlen=25)
+
     speech_started = False
     silence_ms = 0
     utterance_ms = 0
@@ -2354,8 +2361,8 @@ async def vobiz_stream(websocket: WebSocket):
             return
         rms = math.sqrt(sum(sample * sample for sample in samples) / max(len(samples), 1))
         peak = max(abs(sample) for sample in samples)
-        # Mobile phone lines have background noise (RMS 20-60). Use higher threshold for real human voice.
-        is_voice = rms > 90 or peak > 300
+        # Mobile phone mic audio sensitivity threshold
+        is_voice = rms > 30 or peak > 100
         endpoint_ms = int(config_state.get("endpoint_duration") or 600)
 
         if not speech_started:
@@ -2388,7 +2395,8 @@ async def vobiz_stream(websocket: WebSocket):
                 silence_ms = 0
             else:
                 silence_ms += VOBIZ_FRAME_MS
-            if (silence_ms >= endpoint_ms or utterance_ms >= 5000) and len(audio_buffer) >= sample_rate * 2 // 2:
+            if (silence_ms >= endpoint_ms or utterance_ms >= 10000) and len(audio_buffer) >= sample_rate * 2 // 2:
+
                 utterance = bytes(audio_buffer)
                 logger.info("Utterance complete: silence_ms=%d utterance_ms=%d buffer=%d bytes, processing...", silence_ms, utterance_ms, len(utterance))
                 audio_buffer.clear()
