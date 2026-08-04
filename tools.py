@@ -2,7 +2,9 @@ import time
 import json
 import os
 
-CATALOG_PATH = r"c:\Users\Prathamesh\OneDrive\Desktop\Minimal_Voice_Loop_2\nimbus-voice-agent-starter\data\catalog.json"
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+CATALOG_PATH = os.path.join(BASE_DIR, "nimbus-voice-agent-starter", "data", "catalog.json")
+
 
 def load_catalog_data():
     if not os.path.exists(CATALOG_PATH):

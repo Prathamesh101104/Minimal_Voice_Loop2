@@ -56,7 +56,7 @@ app = FastAPI(title="Nimbus Voice Agent API Server")
 # Load product slugs dynamically from catalog.json
 catalog_slugs = []
 try:
-    catalog_path = r"c:\Users\Prathamesh\OneDrive\Desktop\Minimal_Voice_Loop_2\nimbus-voice-agent-starter\data\catalog.json"
+    catalog_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "nimbus-voice-agent-starter", "data", "catalog.json")
     if os.path.exists(catalog_path):
         with open(catalog_path, 'r', encoding='utf-8') as f:
             catalog_data = json.load(f)
@@ -1072,7 +1072,7 @@ async def process_reasoning(
         rag_latency = (time.perf_counter() - rag_start) * 1000
     else:
         # RAGless: Load the entire context.md
-        context_path = r"c:\Users\Prathamesh\OneDrive\Desktop\Minimal_Voice_Loop_2\nimbus-voice-agent-starter\data\context.md"
+        context_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "nimbus-voice-agent-starter", "data", "context.md")
         if os.path.exists(context_path):
             with open(context_path, 'r', encoding='utf-8') as f:
                 context_str = f.read()
@@ -1485,7 +1485,7 @@ async def websocket_endpoint(
                         print(f"RAG error: {e}")
                     rag_latency = (time.perf_counter() - rag_start) * 1000
                 else:
-                    context_path = r"c:\Users\Prathamesh\OneDrive\Desktop\Minimal_Voice_Loop_2\nimbus-voice-agent-starter\data\context.md"
+                    context_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "nimbus-voice-agent-starter", "data", "context.md")
                     if os.path.exists(context_path):
                         with open(context_path, 'r', encoding='utf-8') as f:
                             context_str = f.read()
@@ -1815,13 +1815,15 @@ async def websocket_endpoint(
         logger.exception("WebSocket error: %s", e)
 
 def _phone_public_host(request: Request) -> str:
-    host = request.headers.get(
-        "x-forwarded-host",
-        request.headers.get("host", "footrest-scientist-consonant.ngrok-free.dev"),
-    )
+    env_host = os.environ.get("PUBLIC_HOST") or os.environ.get("RENDER_EXTERNAL_HOSTNAME")
+    if env_host:
+        return env_host.replace("https://", "").replace("http://", "").strip("/")
+
+    host = request.headers.get("x-forwarded-host") or request.headers.get("host") or "minimal-voice-loop2-2.onrender.com"
     if "localhost" in host or "127.0.0.1" in host:
-        host = "footrest-scientist-consonant.ngrok-free.dev"
+        host = "minimal-voice-loop2-2.onrender.com"
     return host
+
 
 def _vobiz_stream_twiml(host: str) -> str:
     stream_url = f"wss://{host}/api/phone/vobiz-stream"
@@ -2198,8 +2200,10 @@ def _normalize_vobiz_audio(frame: bytes, encoding: str) -> bytes:
             exponent = (value >> 4) & 0x07
             mantissa = value & 0x0F
             sample = ((mantissa << 3) + 132) << exponent
+            sample -= 132
             decoded.extend(struct.pack("<h", -sample if sign else sample))
         return bytes(decoded)
+
 
     if "pcma" in encoding or "alaw" in encoding:
         decoded = bytearray()
@@ -2361,10 +2365,14 @@ async def vobiz_stream(websocket: WebSocket):
             speech_started = True
             silence_ms = 0
             logger.info("Speech detected at frame %d (RMS=%.1f peak=%d), buffering with pre-roll...", media_frames, rms, peak)
-            # Only clear audio / cancel greeting if caller is speaking loudly (rms > 180 or peak > 500)
-            if stream_id and agent_speaking and (rms > 180 or peak > 500):
-                await websocket.send_json({"event": "clearAudio", "streamId": stream_id})
+            # If caller speaks while agent is talking, barge-in immediately
+            if agent_speaking:
                 agent_speaking = False
+                if stream_id:
+                    try:
+                        await websocket.send_json({"event": "clearAudio", "streamId": stream_id})
+                    except Exception:
+                        pass
                 if greeting_task and not greeting_task.done():
                     greeting_task.cancel()
             audio_buffer.clear()
@@ -2372,9 +2380,10 @@ async def vobiz_stream(websocket: WebSocket):
                 audio_buffer.extend(pf)
             pre_roll_buffer.clear()
 
-        if speech_started and not agent_speaking:
+        if speech_started:
             audio_buffer.extend(frame)
             utterance_ms += VOBIZ_FRAME_MS
+
             if is_voice:
                 silence_ms = 0
             else:

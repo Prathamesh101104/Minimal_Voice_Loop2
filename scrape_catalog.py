@@ -2,8 +2,10 @@ import json
 import os
 
 def main():
-    catalog_path = r"c:\Users\Prathamesh\OneDrive\Desktop\Minimal_Voice_Loop_2\nimbus-voice-agent-starter\data\catalog.json"
-    output_path = r"c:\Users\Prathamesh\OneDrive\Desktop\Minimal_Voice_Loop_2\nimbus-voice-agent-starter\data\context.md"
+    base_dir = os.path.dirname(os.path.abspath(__file__))
+    catalog_path = os.path.join(base_dir, "nimbus-voice-agent-starter", "data", "catalog.json")
+    output_path = os.path.join(base_dir, "nimbus-voice-agent-starter", "data", "context.md")
+
 
     if not os.path.exists(catalog_path):
         print(f"Error: Catalog file not found at {catalog_path}")

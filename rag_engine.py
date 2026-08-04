@@ -11,7 +11,9 @@ try:
 except ImportError:
     FAISS_AVAILABLE = False
 
-CONTEXT_PATH = r"c:\Users\Prathamesh\OneDrive\Desktop\Minimal_Voice_Loop_2\nimbus-voice-agent-starter\data\context.md"
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+CONTEXT_PATH = os.path.join(BASE_DIR, "nimbus-voice-agent-starter", "data", "context.md")
+
 
 # Singleton engine instance
 _RAG_ENGINE = None
