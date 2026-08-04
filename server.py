@@ -2361,8 +2361,10 @@ async def vobiz_stream(websocket: WebSocket):
             return
         rms = math.sqrt(sum(sample * sample for sample in samples) / max(len(samples), 1))
         peak = max(abs(sample) for sample in samples)
-        # Mobile phone mic audio sensitivity threshold
-        is_voice = rms > 30 or peak > 100
+        # Mobile phone mic audio sensitivity threshold for speech buffering
+        is_voice = rms > 35 or peak > 120
+        # Intentional loud caller speech threshold required to interrupt/cancel an active agent response
+        is_barge_in = (rms > 150 or peak > 450) and media_frames > 50
         endpoint_ms = int(config_state.get("endpoint_duration") or 600)
 
         if not speech_started:
@@ -2372,20 +2374,22 @@ async def vobiz_stream(websocket: WebSocket):
             speech_started = True
             silence_ms = 0
             logger.info("Speech detected at frame %d (RMS=%.1f peak=%d), buffering with pre-roll...", media_frames, rms, peak)
-            # If caller speaks while agent is talking, barge-in immediately
-            if agent_speaking:
-                agent_speaking = False
-                if stream_id:
-                    try:
-                        await websocket.send_json({"event": "clearAudio", "streamId": stream_id})
-                    except Exception:
-                        pass
-                if greeting_task and not greeting_task.done():
-                    greeting_task.cancel()
             audio_buffer.clear()
             for pf in pre_roll_buffer:
                 audio_buffer.extend(pf)
             pre_roll_buffer.clear()
+
+        if is_barge_in and agent_speaking:
+            logger.info("Caller barge-in detected at frame %d (RMS=%.1f peak=%d), interrupting agent...", media_frames, rms, peak)
+            agent_speaking = False
+            if stream_id:
+                try:
+                    await websocket.send_json({"event": "clearAudio", "streamId": stream_id})
+                except Exception:
+                    pass
+            if greeting_task and not greeting_task.done():
+                greeting_task.cancel()
+
 
         if speech_started:
             audio_buffer.extend(frame)
