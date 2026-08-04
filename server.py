@@ -2098,54 +2098,41 @@ def pcm16_to_alaw(pcm_bytes: bytes) -> bytes:
 
 async def _send_vobiz_audio(websocket: WebSocket, stream_id: str, audio: bytes, sample_rate: int):
     import base64
-    import struct
 
     if not audio:
         return
     if not stream_id:
         stream_id = "vobiz-stream"
 
-    # 1. Convert Little-Endian PCM16 to G.711 A-law (PCMA) for Indian mobile phone carriers
-    alaw_pcm = pcm16_to_alaw(audio)
-
-    # 2. Convert Little-Endian PCM16 to G.711 mu-law (PCMU)
+    # Convert Little-Endian PCM16 to G.711 mu-law (PCMU) matching TwiML stream contentType
     mulaw_pcm = pcm16_to_mulaw(audio)
 
-    chunk_duration_ms = 500
-    chunk_size = sample_rate * 1 * chunk_duration_ms // 1000  # 1 byte per sample for 8kHz A-law / mu-law
-    total_chunks = 0
+    # 160ms audio chunks for smooth PSTN/mobile playback
+    chunk_size = 1280
 
-    for offset in range(0, max(len(alaw_pcm), len(mulaw_pcm)), chunk_size):
-        # Send G.711 A-law (PCMA) chunk (Primary codec for Indian mobile carriers)
-        alaw_chunk = alaw_pcm[offset:offset + chunk_size]
-        if alaw_chunk:
-            payload_alaw_b64 = base64.b64encode(bytes(alaw_chunk)).decode("utf-8")
-            await websocket.send_json({
-                "event": "playAudio",
-                "media": {
-                    "contentType": "audio/x-alaw",
-                    "sampleRate": sample_rate,
-                    "payload": payload_alaw_b64
-                }
-            })
+    for offset in range(0, len(mulaw_pcm), chunk_size):
+        chunk = mulaw_pcm[offset:offset + chunk_size]
+        if chunk:
+            payload_b64 = base64.b64encode(bytes(chunk)).decode("utf-8")
+            try:
+                await websocket.send_json({
+                    "event": "playAudio",
+                    "streamId": stream_id,
+                    "media": {
+                        "contentType": "audio/x-mulaw",
+                        "sampleRate": sample_rate,
+                        "payload": payload_b64
+                    }
+                })
+                await asyncio.sleep(0.015)
+            except Exception as e:
+                logger.warning("Error sending Vobiz audio frame: %s", e)
+                break
 
-        # Send G.711 mu-law (PCMU) chunk
-        mulaw_chunk = mulaw_pcm[offset:offset + chunk_size]
-        if mulaw_chunk:
-            payload_mulaw_b64 = base64.b64encode(bytes(mulaw_chunk)).decode("utf-8")
-            await websocket.send_json({
-                "event": "playAudio",
-                "media": {
-                    "contentType": "audio/x-mulaw",
-                    "sampleRate": sample_rate,
-                    "payload": payload_mulaw_b64
-                }
-            })
-
-        total_chunks += 1
         await asyncio.sleep(0.05)
 
-    logger.info("Sent %d playAudio chunks (A-law %d bytes, mu-law %d bytes) to stream %s", total_chunks, len(alaw_pcm), len(mulaw_pcm), stream_id)
+    logger.info("Sent playAudio stream (%d bytes) to stream %s", len(mulaw_pcm), stream_id)
+
 
     await websocket.send_json({
         "event": "checkpoint",
