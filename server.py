@@ -1951,36 +1951,24 @@ async def _phone_tts_pcm(text: str, target_sample_rate: int = VOBIZ_STREAM_SAMPL
     if not cleaned:
         return b""
 
-    # 1. Try Gemini native TTS first (configured with Gemini_API_Key)
-    gemini_key = config_state.get("gemini_key") or os.environ.get("Gemini_API_Key") or os.environ.get("GEMINI_API_KEY")
-    if gemini_key:
-        try:
-            import base64
-            import httpx
-            url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-tts:generateContent?key={gemini_key}"
-            body = {
-                "contents": [{"parts": [{"text": f"Read the following text aloud exactly: {cleaned}"}]}],
-                "generationConfig": {
-                    "responseModalities": ["AUDIO"],
-                    "speechConfig": {"voiceConfig": {"prebuiltVoiceConfig": {"voiceName": "Zephyr"}}},
-                },
-            }
-            async with httpx.AsyncClient() as client:
-                r = await client.post(url, json=body, timeout=30.0)
-            if r.status_code == 200:
-                part = r.json()["candidates"][0]["content"]["parts"][0]
-                inline_obj = part.get("inlineData") or part.get("inline_data") or {}
-                raw_b64 = inline_obj.get("data", "")
-                if raw_b64:
-                    pcm_data = base64.b64decode(raw_b64)
-                    logger.info("Gemini TTS generated %d bytes of PCM audio", len(pcm_data))
-                    return resample_pcm(pcm_data, 24000, target_sample_rate)
-            else:
-                logger.warning("Gemini TTS failed (%s): %s", r.status_code, r.text[:300])
-        except Exception as e:
-            logger.warning("Gemini TTS failed: %s", e)
+    # 1. Try Edge TTS (Microsoft Neural Human Voice - Free, zero API key required)
+    try:
+        import edge_tts
+        import miniaudio
+        async def _generate_edge_pcm():
+            c = edge_tts.Communicate(cleaned, "en-US-AvaNeural")
+            mp3_bytes = b"".join([chunk["data"] async for chunk in c.stream() if chunk["type"] == "audio"])
+            decoded = miniaudio.decode(mp3_bytes, nchannels=1, sample_rate=target_sample_rate)
+            return decoded.samples.tobytes()
 
-    # 2. Try OpenAI TTS next
+        pcm_audio = await _generate_edge_pcm()
+        if pcm_audio:
+            logger.info("Edge TTS generated %d bytes of %dHz PCM audio", len(pcm_audio), target_sample_rate)
+            return pcm_audio
+    except Exception as e:
+        logger.warning("Edge TTS failed: %s", e)
+
+    # 2. Try OpenAI TTS next if key present
     openai_key = config_state.get("openai_key") or os.environ.get("OpenAI_API_Key") or os.environ.get("OPENAI_API_KEY")
     if openai_key:
         try:
@@ -2002,11 +1990,12 @@ async def _phone_tts_pcm(text: str, target_sample_rate: int = VOBIZ_STREAM_SAMPL
         except Exception as e:
             logger.warning("OpenAI TTS failed: %s", e)
 
-    # 3. Try ElevenLabs TTS as fallback
+    # 3. Try ElevenLabs TTS
     elevenlabs_key = config_state.get("elevenlabs_key") or os.environ.get("ElevenLabs_API_Key") or os.environ.get("ELEVENLABS_API_KEY")
     if elevenlabs_key:
         try:
             import httpx
+            import miniaudio
             url = "https://api.elevenlabs.io/v1/text-to-speech/EXAVITQu4vr4xnSDxMaL"
             headers = {"xi-api-key": elevenlabs_key, "Content-Type": "application/json", "accept": "audio/mp3"}
             body = {"text": cleaned, "model_id": "eleven_monolingual_v1"}
@@ -2014,26 +2003,13 @@ async def _phone_tts_pcm(text: str, target_sample_rate: int = VOBIZ_STREAM_SAMPL
                 response = await client.post(url, json=body, headers=headers, timeout=10.0)
             if response.status_code == 200:
                 logger.info("ElevenLabs TTS generated %d bytes (MP3)", len(response.content))
-                return response.content
-            else:
-                logger.warning("ElevenLabs TTS error: %s", response.text[:200])
+                decoded = miniaudio.decode(response.content, nchannels=1, sample_rate=target_sample_rate)
+                return decoded.samples.tobytes()
         except Exception as e:
             logger.warning("ElevenLabs TTS failed: %s", e)
 
-    # 4. Fallback: Generate an audible audio notification tone so caller hears audio response
-    logger.warning("No external TTS service available, generating audible notification tone")
-    import struct
-    import math
-    duration_sec = 1.0
-    num_samples = int(target_sample_rate * duration_sec)
-    samples = []
-    freq1, freq2 = 440.0, 880.0
-    for i in range(num_samples):
-        t = i / target_sample_rate
-        freq = freq1 if t < 0.5 else freq2
-        val = int(10000 * math.sin(2 * math.pi * freq * t))
-        samples.append(val)
-    return struct.pack("<" + "h" * num_samples, *samples)
+    logger.warning("No TTS engine produced audio for text: %s", cleaned[:50])
+    return b""
 
 def pcm16_to_mulaw(audio: bytes) -> bytes:
     """Convert 16-bit PCM Little-Endian audio to 8-bit G.711 mu-law for PSTN mobile phone calls."""

@@ -8,3 +8,6 @@ openai
 anthropic
 google-generativeai
 tiktoken
+edge-tts
+miniaudio
+
