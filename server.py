@@ -1829,11 +1829,7 @@ def _vobiz_stream_twiml(host: str) -> str:
     stream_url = f"wss://{host}/api/phone/vobiz-stream"
     return f"""<?xml version="1.0" encoding="UTF-8"?>
 <Response>
-    <Connect>
-        <Stream url="{stream_url}" bidirectional="true" keepCallAlive="true" audioTrack="inbound" contentType="audio/x-mulaw;rate=8000" streamTimeout="3600">
-            {stream_url}
-        </Stream>
-    </Connect>
+    <Stream bidirectional="true" keepCallAlive="true" audioTrack="inbound" contentType="audio/x-mulaw;rate=8000" streamTimeout="3600">{stream_url}</Stream>
 </Response>
 """
 
