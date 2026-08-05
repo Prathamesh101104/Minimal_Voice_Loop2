@@ -1829,12 +1829,14 @@ def _vobiz_stream_twiml(host: str) -> str:
     stream_url = f"wss://{host}/api/phone/vobiz-stream"
     return f"""<?xml version="1.0" encoding="UTF-8"?>
 <Response>
-    <Stream bidirectional="true" keepCallAlive="true" audioTrack="inbound"
-            contentType="audio/x-mulaw;rate=8000" streamTimeout="3600">
-        {stream_url}
-    </Stream>
+    <Connect>
+        <Stream url="{stream_url}" bidirectional="true" keepCallAlive="true" audioTrack="inbound" contentType="audio/x-mulaw;rate=8000" streamTimeout="3600">
+            {stream_url}
+        </Stream>
+    </Connect>
 </Response>
 """
+
 
 @app.get("/api/phone/test-tts")
 async def test_tts_endpoint():
@@ -2104,17 +2106,28 @@ async def _send_vobiz_audio(websocket: WebSocket, stream_id: str, audio: bytes, 
     if not stream_id:
         stream_id = "vobiz-stream"
 
-    # Convert Little-Endian PCM16 to G.711 mu-law (PCMU) matching TwiML stream contentType
+    # Convert Little-Endian PCM16 to G.711 mu-law (PCMU) matching TwiML stream
     mulaw_pcm = pcm16_to_mulaw(audio)
 
-    # 160ms audio chunks for smooth PSTN/mobile playback
-    chunk_size = 1280
+    # 20ms audio chunks (160 bytes at 8000Hz 8-bit mulaw) for smooth PSTN playback
+    chunk_size = 160
 
     for offset in range(0, len(mulaw_pcm), chunk_size):
         chunk = mulaw_pcm[offset:offset + chunk_size]
         if chunk:
             payload_b64 = base64.b64encode(bytes(chunk)).decode("utf-8")
             try:
+                # Standard TwiML / Plivo / Vobiz media event
+                await websocket.send_json({
+                    "event": "media",
+                    "streamSid": stream_id,
+                    "streamId": stream_id,
+                    "media": {
+                        "payload": payload_b64,
+                        "track": "outbound"
+                    }
+                })
+                # Duplicate playAudio event for test script compatibility
                 await websocket.send_json({
                     "event": "playAudio",
                     "streamId": stream_id,
@@ -2124,21 +2137,21 @@ async def _send_vobiz_audio(websocket: WebSocket, stream_id: str, audio: bytes, 
                         "payload": payload_b64
                     }
                 })
-                await asyncio.sleep(0.015)
+                await asyncio.sleep(0.02)
             except Exception as e:
                 logger.warning("Error sending Vobiz audio frame: %s", e)
                 break
 
-        await asyncio.sleep(0.05)
+    logger.info("Sent audio media stream (%d bytes) to stream %s", len(mulaw_pcm), stream_id)
 
-    logger.info("Sent playAudio stream (%d bytes) to stream %s", len(mulaw_pcm), stream_id)
-
-
-    await websocket.send_json({
-        "event": "checkpoint",
-        "streamId": stream_id,
-        "name": f"response-{int(time.time() * 1000)}"
-    })
+    try:
+        await websocket.send_json({
+            "event": "checkpoint",
+            "streamId": stream_id,
+            "name": f"response-{int(time.time() * 1000)}"
+        })
+    except Exception:
+        pass
 
 def _extract_vobiz_media_payload(message: Any, encoding: str) -> tuple[bytes, str]:
     """Extract audio bytes from either JSON Vobiz events or raw binary frames."""
@@ -2175,8 +2188,6 @@ def _extract_vobiz_media_payload(message: Any, encoding: str) -> tuple[bytes, st
                     return base64.b64decode(payload), track
                 except Exception:
                     return payload.encode("utf-8"), track
-            if isinstance(payload, (bytes, bytearray)):
-                return bytes(payload), track
     return b"", "inbound"
 
 
@@ -2184,39 +2195,70 @@ def _normalize_vobiz_audio(frame: bytes, encoding: str) -> bytes:
     """Convert Vobiz telephony frames to little-endian PCM16 for ASR."""
     import struct
 
-    encoding = (encoding or "").lower()
-    if "mulaw" in encoding or "pcmu" in encoding:
-        decoded = bytearray()
-        for value in frame:
-            value = ~value & 0xFF
-            sign = value & 0x80
-            exponent = (value >> 4) & 0x07
-            mantissa = value & 0x0F
-            sample = ((mantissa << 3) + 132) << exponent
-            sample -= 132
-            decoded.extend(struct.pack("<h", -sample if sign else sample))
-        return bytes(decoded)
+    if not frame:
+        return b""
 
+    encoding = (encoding or "").lower()
+
+    # Vobiz TwiML stream specifies contentType="audio/x-mulaw;rate=8000"
+    # Even if Vobiz metadata claims "audio/x-l16", 160-byte frames (1 byte/sample) are G.711 mu-law!
+    is_mulaw = "mulaw" in encoding or "pcmu" in encoding or len(frame) == 160 or len(frame) == 80 or (len(frame) == 320 and "mulaw" in encoding)
+
+    if is_mulaw:
+        try:
+            import audioop
+            return audioop.ulaw2lin(frame, 2)
+        except Exception:
+            MULAW_TO_PCM16 = [
+                -32124, -31100, -30076, -29052, -28028, -27004, -25980, -24956,
+                -23932, -22908, -21884, -20860, -19836, -18812, -17788, -16764,
+                -15996, -15484, -14972, -14460, -13948, -13436, -12924, -12412,
+                -11900, -11388, -10876, -10364,  -9852,  -9340,  -8828,  -8316,
+                 -7932,  -7676,  -7420,  -7164,  -6908,  -6652,  -6396,  -6140,
+                 -5884,  -5628,  -5372,  -5116,  -4860,  -4604,  -4348,  -4092,
+                 -3899,  -3771,  -3643,  -3515,  -3387,  -3259,  -3131,  -3003,
+                 -2875,  -2747,  -2619,  -2491,  -2363,  -2235,  -2107,  -1979,
+                 -1883,  -1819,  -1755,  -1691,  -1627,  -1563,  -1499,  -1435,
+                  -1371,  -1307,  -1243,  -1179,  -1115,  -1051,   -987,   -923,
+                  -875,   -843,   -811,   -779,   -747,   -715,   -683,   -651,
+                  -619,   -587,   -555,   -523,   -491,   -459,   -427,   -395,
+                  -371,   -355,   -339,   -323,   -307,   -291,   -275,   -259,
+                  -243,   -227,   -211,   -195,   -179,   -163,   -147,   -131,
+                  -119,   -111,   -103,    -95,    -87,    -79,    -71,    -63,
+                   -55,    -47,    -39,    -31,    -23,    -15,     -7,      1,
+                 32124,  31100,  30076,  29052,  28028,  27004,  25980,  24956,
+                 23932,  22908,  21884,  20860,  19836,  18812,  17788,  16764,
+                 15996,  15484,  14972,  14460,  13948,  13436,  12924,  12412,
+                 11900,  11388,  10876,  10364,   9852,   9340,   8828,   8316,
+                  7932,   7676,   7420,   7164,   6908,   6652,   6396,   6140,
+                  5884,   5628,   5372,   5116,   4860,   4604,   4348,   4092,
+                  3899,   3771,   3643,   3515,   3387,   3259,   3131,   3003,
+                  2875,   2747,   2619,   2491,   2363,   2235,   2107,   1979,
+                  1883,   1819,   1755,   1691,   1627,   1563,   1499,   1435,
+                  1371,   1307,   1243,   1179,   1115,   1051,    987,    923,
+                   875,    843,    811,    779,    747,    715,    683,    651,
+                   619,    587,    555,    523,    491,    459,    427,    395,
+                   371,    355,    339,    323,    307,    291,    275,    259,
+                   243,    227,    211,    195,    179,    163,    147,    131,
+                   119,    111,    103,     95,     87,     79,     71,     63,
+                    55,     47,     39,     31,     23,     15,      7,     -1
+            ]
+            decoded = bytearray()
+            for b in frame:
+                decoded.extend(struct.pack("<h", MULAW_TO_PCM16[b]))
+            return bytes(decoded)
 
     if "pcma" in encoding or "alaw" in encoding:
-        decoded = bytearray()
-        for value in frame:
-            value ^= 0x55
-            sign = value & 0x80
-            exponent = (value >> 4) & 0x07
-            mantissa = value & 0x0F
-            sample = (mantissa << 4) + 8
-            if exponent:
-                sample = (sample + 256) << (exponent - 1)
-            decoded.extend(struct.pack("<h", -sample if sign else sample))
-        return bytes(decoded)
+        try:
+            import audioop
+            return audioop.alaw2lin(frame, 2)
+        except Exception:
+            pass
 
     if "l16" in encoding or "pcm" in encoding:
         usable = frame[: len(frame) - len(frame) % 2]
         if not usable:
             return b""
-        # Telephony RFC 3551 L16 / audio/x-l16 is Network Byte Order (Big-Endian).
-        # We convert it to Little-Endian 16-bit PCM for standard ASR engines.
         converted = bytearray()
         for i in range(0, len(usable), 2):
             val = struct.unpack(">h", usable[i:i + 2])[0]
@@ -2268,7 +2310,7 @@ async def vobiz_stream(websocket: WebSocket):
             samples.append(max(-32768, min(32767, val)))
         return _struct.pack("<" + "h" * num_samples, *samples)
 
-    async def speak_to_caller(text: str, send_connection_tone: bool = False):
+    async def speak_to_caller(text: str):
         nonlocal agent_speaking, stream_id
         current_stream_id = stream_id or "vobiz-stream"
         if not text:
@@ -2277,13 +2319,6 @@ async def vobiz_stream(websocket: WebSocket):
         agent_speaking = True
         logger.info("speak_to_caller: generating TTS for %d char text (stream_id=%s)", len(text), current_stream_id)
         try:
-            # Send an immediate connection tone so caller hears audio instantly
-            # while the Gemini TTS generates in the background (~4-6 seconds)
-            if send_connection_tone:
-                tone = _generate_connection_tone(sample_rate, 400)
-                logger.info("speak_to_caller: sending connection tone: %d bytes", len(tone))
-                await _send_vobiz_audio(websocket, current_stream_id, tone, sample_rate)
-
             response_audio = await _phone_tts_pcm(text, sample_rate)
             if response_audio:
                 logger.info("speak_to_caller: sending audio response: %d bytes", len(response_audio))
@@ -2349,7 +2384,7 @@ async def vobiz_stream(websocket: WebSocket):
         rms = math.sqrt(sum(sample * sample for sample in samples) / max(len(samples), 1))
         peak = max(abs(sample) for sample in samples)
         # Mobile phone mic audio sensitivity threshold for speech buffering
-        is_voice = rms > 35 or peak > 120
+        is_voice = rms > 18 or peak > 50
         # Intentional loud caller speech threshold required to interrupt/cancel an active agent response
         is_barge_in = (rms > 150 or peak > 450) and media_frames > 50
         endpoint_ms = int(config_state.get("endpoint_duration") or 600)
@@ -2366,7 +2401,7 @@ async def vobiz_stream(websocket: WebSocket):
                 audio_buffer.extend(pf)
             pre_roll_buffer.clear()
 
-        if is_barge_in and agent_speaking:
+        if is_barge_in and agent_speaking and (greeting_task is None or greeting_task.done()):
             logger.info("Caller barge-in detected at frame %d (RMS=%.1f peak=%d), interrupting agent...", media_frames, rms, peak)
             agent_speaking = False
             if stream_id:
@@ -2374,8 +2409,6 @@ async def vobiz_stream(websocket: WebSocket):
                     await websocket.send_json({"event": "clearAudio", "streamId": stream_id})
                 except Exception:
                     pass
-            if greeting_task and not greeting_task.done():
-                greeting_task.cancel()
 
 
         if speech_started:
@@ -2459,7 +2492,7 @@ async def vobiz_stream(websocket: WebSocket):
                 })
                 logger.info("Vobiz stream started: call=%s, stream=%s, encoding=%s, rate=%s", call_id, stream_id, media_encoding, sample_rate)
                 logger.info("Creating greeting task for: %s (stream_id=%s)", PHONE_GREETING[:50], stream_id)
-                greeting_task = asyncio.create_task(speak_to_caller(PHONE_GREETING, send_connection_tone=True))
+                greeting_task = asyncio.create_task(speak_to_caller(PHONE_GREETING))
                 logger.info("Greeting task created: %s", greeting_task)
             elif event == "media":
                 payload, track = _extract_vobiz_media_payload(message, media_encoding)
