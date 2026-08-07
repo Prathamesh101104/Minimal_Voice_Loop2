@@ -683,9 +683,10 @@ config_state = {
     "gemini_key": "",
     "anthropic_key": "",
     "elevenlabs_key": "",
+    "bolna_key": "",
     "asr_provider": "browser",  # browser, openai, gemini, elevenlabs
     "llm_provider": "openai",   # openai, gemini, anthropic
-    "tts_provider": "browser",  # browser, piper, openai, gemini, elevenlabs
+    "tts_provider": "browser",  # browser, piper, bolna, openai, gemini, elevenlabs
     "rag_mode": True,           # True: RAG, False: RAGless (full context.md)
     "streaming_mode": True,     # True: Streaming, False: Batch
     "system_prompt": (
@@ -1309,22 +1310,48 @@ async def process_tts(
     provider: str = Form("browser"),
     x_openai_key: Optional[str] = Header(None, alias="X-OpenAI-Key"),
     x_gemini_key: Optional[str] = Header(None, alias="X-Gemini-Key"),
-    x_elevenlabs_key: Optional[str] = Header(None, alias="X-ElevenLabs-Key")
+    x_elevenlabs_key: Optional[str] = Header(None, alias="X-ElevenLabs-Key"),
+    x_bolna_key: Optional[str] = Header(None, alias="X-Bolna-Key")
 ):
     start_time = time.perf_counter()
     text = clean_text_for_tts(text)
     openai_key = x_openai_key or config_state["openai_key"]
     gemini_key = x_gemini_key or config_state["gemini_key"]
     elevenlabs_key = x_elevenlabs_key or config_state["elevenlabs_key"]
+    bolna_key = x_bolna_key or config_state.get("bolna_key") or os.environ.get("BOLNA_API_KEY")
     
     key_avail = (
         (provider == "browser") or
         (provider == "piper") or
+        (provider == "bolna" and bolna_key) or
         (provider == "openai" and openai_key) or
         (provider == "gemini" and gemini_key) or
         (provider == "elevenlabs" and elevenlabs_key)
     )
     
+    if provider == "bolna" and bolna_key:
+        try:
+            import base64
+            import httpx
+            url = "https://api.bolna.dev/v1/synthesize"
+            headers = {"Authorization": f"Bearer {bolna_key}", "Content-Type": "application/json"}
+            body = {"text": text, "voice": "en-IN-female-1", "format": "mp3"}
+            async with httpx.AsyncClient() as client:
+                r = await client.post(url, headers=headers, json=body, timeout=30.0)
+            if r.status_code == 200:
+                audio_b64 = base64.b64encode(r.content).decode("utf-8")
+                latency = (time.perf_counter() - start_time) * 1000
+                return {
+                    "use_browser_speech": False,
+                    "audio": audio_b64,
+                    "latency_ms": latency,
+                    "buffer_latency_ms": 60.0
+                }
+            else:
+                logger.warning("Bolna AI TTS error (%d): %s", r.status_code, r.text[:200])
+        except Exception as e:
+            logger.warning("Bolna AI TTS REST synthesis failed: %s", e)
+
     if provider == "piper":
         try:
             import io
@@ -1974,7 +2001,25 @@ async def _phone_tts_pcm(text: str, target_sample_rate: int = VOBIZ_STREAM_SAMPL
     except Exception as e:
         logger.debug("Piper TTS skipped/failed: %s", e)
 
-    # 2. Try Gemini native TTS
+    # 2. Try Bolna AI TTS if key provided
+    bolna_key = config_state.get("bolna_key") or os.environ.get("BOLNA_API_KEY")
+    if bolna_key:
+        try:
+            import httpx
+            import miniaudio
+            url = "https://api.bolna.dev/v1/synthesize"
+            headers = {"Authorization": f"Bearer {bolna_key}", "Content-Type": "application/json"}
+            body = {"text": cleaned, "voice": "en-IN-female-1", "format": "mp3"}
+            async with httpx.AsyncClient() as client:
+                r = await client.post(url, headers=headers, json=body, timeout=10.0)
+            if r.status_code == 200:
+                logger.info("Bolna AI TTS generated %d bytes (MP3)", len(r.content))
+                decoded = miniaudio.decode(r.content, nchannels=1, sample_rate=target_sample_rate)
+                return decoded.samples.tobytes()
+        except Exception as e:
+            logger.warning("Bolna AI TTS failed: %s", e)
+
+    # 3. Try Gemini native TTS
     gemini_key = config_state.get("gemini_key") or os.environ.get("Gemini_API_Key") or os.environ.get("GEMINI_API_KEY")
     if gemini_key:
         try:
